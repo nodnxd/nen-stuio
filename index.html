@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="NEN STUDIO makes Max for Live devices for Ableton Live: Set Monitor, Strip Silence and Drum Slicer.">
+<link rel="icon" href="/favicon.png">
+<title>NEN STUDIO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&amp;family=Noto+Sans+KR:wght@400;600;800&amp;family=Noto+Sans+JP:wght@400;600;800&amp;display=swap">
+<style>
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}
+/* Layout: one board of flat tiles with 8px gaps, like devices racked side by side in Live's device view. Every tile holds one true thing: the name, a sentence, a real device window, a number from a real session. */
+:root{
+  --ground:#0c0c0b;      /* page */
+  --tile:#171715;        /* tile, one step up */
+  --tile-2:#201f1c;      /* second tone for bands */
+  --ink:#ecebe8;         /* text, and the paper tile */
+  --soft:#a3a29d;        /* secondary text */
+  --accent:#ffb21f;      /* brand amber: actions and one tile per screen */
+  --on-accent:#16120a;
+  --on-paper:#0c0c0b;
+  --paper-soft:#6a6966;
+  --cjk:"Noto Sans KR","Noto Sans JP","Apple SD Gothic Neo","Hiragino Sans","Malgun Gothic","Yu Gothic";
+  --face:"Archivo",var(--cjk),"Helvetica Neue",Arial,sans-serif;
+  --t1:clamp(64px,8vw,124px);
+  --t2:clamp(28px,3vw,44px);
+  --t3:clamp(19px,1.6vw,22px);
+  --t4:18px;
+  --t5:16px;
+  --gap:8px;
+  --ease-out:cubic-bezier(.23,1,.32,1);
+  --ease-io:cubic-bezier(.77,0,.175,1);
+  color-scheme:dark;
+}
+:lang(ja){--cjk:"Noto Sans JP","Noto Sans KR","Hiragino Sans","Yu Gothic","Apple SD Gothic Neo","Malgun Gothic"}
+*{box-sizing:border-box}
+html{background:var(--ground)}
+body{background:var(--ground);color:var(--ink);font:400 var(--t4)/1.5 var(--face);font-variation-settings:"wdth" 100;-webkit-font-smoothing:antialiased;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 16px}
+.top,.hero,main,.foot{max-width:1320px;margin-inline:auto}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+h1,h2,h3,p{margin:0}
+.x{font-variation-settings:"wdth" 125;font-weight:900;letter-spacing:-.02em;line-height:.9;text-transform:uppercase}
+.num{font-variant-numeric:tabular-nums}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* pressable things */
+.press{transition:transform 160ms var(--ease-out),background-color 160ms ease}
+.press:active{transform:scale(.97)}
+
+/* ---------- top row ---------- */
+.top{display:grid;grid-template-columns:60px minmax(0,1fr) auto;gap:var(--gap);height:60px}
+.top>*{background:var(--tile)}
+.mark{display:grid;place-items:center;background:var(--ink);text-decoration:none}
+.mark svg{width:44px;height:auto}
+.links{display:flex;align-items:center;gap:6px 24px;padding:0 20px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.links::-webkit-scrollbar{display:none}
+.links a{text-decoration:none;font-size:var(--t5);font-weight:500;white-space:nowrap;color:var(--soft)}
+.links a:hover{color:var(--ink)}
+.links .spacer{flex:1}
+.lang{display:flex;gap:2px}
+.lang button{font:600 var(--t5) var(--face);background:none;border:0;color:var(--soft);padding:8px 8px;cursor:pointer}
+.lang button[aria-pressed="true"]{color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:2px}
+.act{display:flex;align-items:center;padding:0 22px;background:var(--accent)!important;color:var(--on-accent);font-weight:700;font-size:var(--t5);text-decoration:none;white-space:nowrap}
+.act:hover{background:#ffc04a!important}
+
+/* ---------- hero board ---------- */
+.hero{display:grid;grid-template-columns:1fr;grid-template-rows:clamp(220px,24vw,320px) clamp(170px,15vw,220px);gap:var(--gap);margin-top:var(--gap)}
+.name{background:var(--ink);color:var(--on-paper);display:grid;place-items:center;min-width:0}
+.name .studio{font-size:var(--t3);font-weight:600;color:var(--paper-soft);max-width:22ch}
+.name h1{font-size:var(--t1);color:var(--on-paper);line-height:1}
+.pic{position:relative;overflow:hidden;background:var(--tile);margin:0;min-width:0}
+.pic img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}
+.pic figcaption{position:absolute;left:0;bottom:0;padding:8px 12px;font-size:var(--t5);color:var(--soft);background:var(--ground)}
+.pic.ui img{object-fit:cover;object-position:0 0}
+.shutter{animation:shutter 1.1s var(--ease-io) both}
+.shutter img{animation:settle 1.1s var(--ease-io) both,drift 18s ease-in-out 1.1s infinite alternate}
+@keyframes shutter{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes settle{from{transform:scale(1.12)}to{transform:scale(1)}}
+@keyframes drift{from{transform:scale(1)}to{transform:scale(1.06) translateX(-1.5%)}}
+.pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:var(--gap);min-width:0}
+.pair>*{min-width:0;overflow-wrap:break-word}
+.say{padding:24px;font-size:var(--t3);line-height:1.25;font-weight:500;background:var(--tile);text-wrap:balance}
+.say.amber{background:var(--accent) url(/img/bg/amber.jpg) right bottom/cover no-repeat;color:var(--on-accent);text-decoration:none;display:flex;flex-direction:column;justify-content:space-between}
+.say.amber .go{font-size:var(--t5);font-weight:700;white-space:nowrap}
+
+/* ---------- sections ---------- */
+.sec{margin-top:clamp(72px,8vw,128px);scroll-margin-top:24px}
+.h2{font-size:var(--t2);font-weight:800;line-height:1.02;letter-spacing:-.02em;font-variation-settings:"wdth" 112;text-wrap:balance}
+.h2 .soft{color:var(--soft);display:block}
+.lead{font-size:var(--t3);line-height:1.3;max-width:30ch;font-weight:500}
+
+.crumb{color:inherit;text-decoration:none}
+.crumb:hover{color:var(--ink)}
+.view>.sec:first-child{margin-top:clamp(40px,5vw,72px)}
+/* Higgsfield backgrounds: they sit behind type and never carry information */
+.name{background:var(--ink) url(/img/bg/paper2.jpg) center 40%/max(116%,520px) auto no-repeat}
+.bg-surface{background:var(--tile) url(/img/bg/surface.jpg) 70% 50%/cover no-repeat}
+.band{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 32px;min-height:clamp(200px,20vw,280px);padding:28px;background-color:var(--tile)}
+.bg-racks{background:var(--tile) url(/img/bg/racks.jpg) right 60%/cover no-repeat}
+.bg-pads{background:var(--tile) url(/img/bg/pads.jpg) right 40%/cover no-repeat;margin-bottom:48px}
+.band .h2{text-shadow:0 1px 18px rgba(0,0,0,.55)}
+/* devices: tabs + bands */
+.dhead{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 32px}
+.buy{display:inline-flex;align-items:center;gap:12px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:var(--t5);text-decoration:none;padding:14px 20px}
+.buy:hover{background:#ffc04a}
+.dbody{display:grid;grid-template-columns:160px minmax(0,1fr);gap:20px;margin-top:36px}
+.tabs{display:grid;gap:6px;align-content:start}
+.tab{all:unset;box-sizing:border-box;display:grid;gap:2px;padding:12px 16px;min-height:64px;background:var(--tile);cursor:pointer}
+.tab b{font-size:var(--t4);font-weight:700}
+.tab span{font-size:var(--t5);color:var(--soft)}
+.tab:hover{background:var(--tile-2)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--on-paper)}
+.tab[aria-selected="true"] span{color:var(--paper-soft)}
+.panel{min-width:0}
+.panel[hidden]{display:none}
+.bands{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.bands li{display:grid;grid-template-columns:minmax(110px,20%) minmax(0,1fr);align-items:center;gap:16px;min-height:64px;padding:10px 18px;background:var(--tile)}
+.bands li:nth-child(even){background:var(--tile-2)}
+.bands .v{font-size:var(--t5);letter-spacing:.04em;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent)}
+.bands .t{font-size:var(--t4);font-weight:600;line-height:1.3}
+.bands .n{display:block;font-size:var(--t5);color:var(--soft);font-weight:400;margin-top:2px;max-width:60ch}
+.win{margin:20px 0 0;max-width:880px;background:#1d1d1d;padding:10px}
+.win img{display:block;width:100%;height:auto}
+.win figcaption{font-size:var(--t5);color:var(--soft);padding-top:8px}
+.cards{list-style:none;margin:20px 0 0;padding:0;display:grid;max-width:880px;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--gap)}
+.card{all:unset;display:block;cursor:zoom-in;width:100%}
+.card img{display:block;width:100%;height:auto;max-width:100%;transition:transform 200ms var(--ease-out)}
+.cards-note{font-size:var(--t5);color:var(--soft);margin-top:8px;max-width:60ch}
+
+/* session board (real Set Monitor readout) */
+.statement{font-size:var(--t3);line-height:1.3;font-weight:500;max-width:34ch}
+.statement b{color:var(--accent);font-weight:700}
+.rows-wrap{margin-top:28px}
+.rows{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.row{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));align-items:center;column-gap:8px;min-height:56px;padding:0 18px;background:var(--tile);cursor:pointer;font-size:var(--t4);font-variant-numeric:tabular-nums}
+.row:hover{background:var(--tile-2)}
+.row .rn{grid-column:1/6;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .rf{grid-column:6/8}
+.row .rp{grid-column:8/10}
+.row .rk{grid-column:10/12;color:var(--soft)}
+.row .rl{grid-column:12/13;justify-self:end;font-size:var(--t5);font-weight:700;padding:6px 10px;background:var(--tile-2);color:var(--soft);white-space:nowrap}
+.row .rl.hot{background:var(--accent);color:var(--on-accent)}
+.row .rl.mut{background:transparent}
+.row.muted .rn,.row.muted .rf,.row.muted .rp{color:var(--soft)}
+.row[aria-expanded="true"]{background:var(--accent);color:var(--on-accent);min-height:156px;align-items:start;padding-block:18px;grid-template-rows:auto 1fr}
+.row[aria-expanded="true"] .rn{font-size:var(--t2);font-weight:800;letter-spacing:-.02em;grid-column:1/13;white-space:normal}
+.row[aria-expanded="true"] .rf,.row[aria-expanded="true"] .rp,.row[aria-expanded="true"] .rk,.row[aria-expanded="true"] .rl{display:none}
+.row .rd{display:none}
+.row[aria-expanded="true"] .rd{display:block;grid-column:1/13;align-self:end;font-size:var(--t4);max-width:70ch;line-height:1.5;font-weight:500}
+.rows-note{font-size:var(--t5);color:var(--soft);margin-top:20px;max-width:60ch}
+
+/* close-ups board */
+.close{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:78px;gap:var(--gap);margin-top:0}
+.ct{position:relative;overflow:hidden;background:var(--tile);margin:0;min-width:0}
+.ct img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}
+.ct figcaption{position:absolute;left:0;bottom:0;max-width:calc(100% - 20px);padding:12px 16px 12px 20px;background:var(--ground)}
+.ct figcaption b{display:block;font-size:var(--t4);font-weight:600;line-height:1.25}
+.ct figcaption span{display:block;font-size:var(--t5);color:var(--soft);line-height:1.35}
+.ct.head{background:var(--accent);color:var(--on-accent);padding:20px 24px}
+.ct.head .h2{color:var(--on-accent)}
+.c-cuts{grid-column:7/13;grid-row:span 2}
+.c-head{grid-column:1/7;grid-row:span 2}
+.c-lat{grid-column:1/7;grid-row:span 4}
+.c-rack{grid-column:7/10;grid-row:span 4}
+.c-undo{grid-column:10/13;grid-row:span 4}
+.c-search{grid-column:1/4;grid-row:span 2}
+.c-flip{grid-column:4/7;grid-row:span 2}
+.c-tracks{grid-column:7/13;grid-row:span 2}
+.c-lat img{object-position:0 0}
+.c-undo img{object-position:50% 100%}
+.c-search img{object-position:0 0}
+.c-flip img{object-position:50% 100%}
+.c-tracks img{object-position:50% 30%}
+
+/* faq: question index, one answer */
+.faq{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px}
+.qs{grid-column:1/6;list-style:none;margin:0;padding:0;display:grid;gap:18px;align-content:start}
+.qs .qh{font-size:var(--t4);color:var(--soft)}
+.q{all:unset;box-sizing:border-box;display:grid;grid-template-columns:8px minmax(0,1fr);gap:14px;align-items:baseline;font-size:var(--t4);line-height:1.35;color:var(--soft);cursor:pointer;width:100%}
+.q::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--soft);transform:translateY(-2px)}
+.q:hover{color:var(--ink)}
+.q[aria-selected="true"]{color:var(--ink)}
+.q[aria-selected="true"]::before{background:var(--accent)}
+.q .inline{display:none}
+.ans{grid-column:7/13;position:sticky;top:120px;align-self:start;min-height:120px}
+.ans p{font-size:var(--t3);line-height:1.3;max-width:30ch;transition:opacity 150ms ease}
+.ans p.fade{opacity:0}
+
+/* footer board */
+.foot{margin-top:clamp(72px,8vw,128px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--gap)}
+.foot>*{background:var(--tile);padding:20px;min-height:170px;min-width:0}
+.f-say{grid-column:1/5;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.f-say p{font-size:var(--t3);line-height:1.25;font-weight:500;text-wrap:balance;max-width:20ch}
+.f-say small{font-size:var(--t5);color:var(--soft)}
+.f-nav{grid-column:5/9}
+.f-nav ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.f-nav a{text-decoration:none;font-size:var(--t4)}
+.f-nav a:hover{color:var(--accent)}
+.f-help{grid-column:9/13;display:flex;flex-direction:column;justify-content:space-between;gap:12px}
+.f-help span{font-size:var(--t5);color:var(--soft)}
+.f-help a{font-size:var(--t4);font-weight:600;word-break:break-word}
+.f-ig{grid-column:1/13;min-height:200px;background:var(--ink) url(/img/bg/paper2.jpg) center 40%/max(116%,520px) auto no-repeat!important;color:var(--on-paper);text-decoration:none;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto 1fr;align-items:end;gap:8px 24px}
+.f-ig .ig-l{grid-column:1/3;font-size:var(--t5);font-weight:700}
+.f-ig b{font-size:clamp(36px,6vw,88px);font-weight:900;font-variation-settings:"wdth" 125;letter-spacing:-.02em;line-height:.9}
+.f-ig svg{width:44px;height:44px;transition:transform 200ms var(--ease-out)}
+
+/* lightbox for the device cards */
+.lb{border:0;padding:0;background:transparent;max-width:min(92vw,540px);width:100%}
+.lb::backdrop{background:rgba(6,6,5,.88)}
+.lb img{display:block;width:100%;height:auto;max-height:86vh;object-fit:contain}
+.lb button{position:absolute;top:10px;right:10px;font:700 13px var(--face);color:var(--on-accent);background:var(--accent);border:0;padding:9px 12px;cursor:pointer}
+.lb[open]{animation:pop 200ms var(--ease-out)}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+
+/* entrances: only applied once JS has marked what is below the fold */
+.rise{transition:opacity 420ms var(--ease-out),transform 420ms var(--ease-out);transition-delay:var(--d,0ms)}
+.rise.pre{opacity:0;transform:translateY(24px)}
+
+@media (hover:hover) and (pointer:fine){
+  .card:hover img{transform:translateY(-4px)}
+  .f-ig:hover svg{transform:translateX(6px)}
+}
+
+@media (max-width:860px){
+  .top{grid-template-columns:52px minmax(0,1fr);grid-template-rows:52px 44px;height:auto}
+  .act{grid-column:1/-1;justify-content:center;padding:0 14px}
+  .links{padding:0 12px;gap:14px;overflow:hidden}
+  .links .wide-only{display:none}
+  .hero{grid-template-columns:1fr;grid-template-rows:auto;gap:6px}
+  .hero{grid-template-rows:auto}
+  .name{min-height:200px}
+  .name h1{font-size:18vw}
+  .pair{order:4;gap:6px}
+  .pair>*{aspect-ratio:1/1;padding:16px;font-size:clamp(17px,4.6vw,22px)}
+  .dbody{grid-template-columns:1fr;gap:16px;margin-top:32px}
+  .tabs{grid-auto-flow:column;grid-auto-columns:1fr;position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--ground);padding-block:6px}
+  .tab{min-height:56px;padding:10px 12px}
+  .tab b{font-size:15px}
+  .bands li{grid-template-columns:1fr;gap:4px;padding:16px}
+  .buy{width:100%;justify-content:center}
+  .row{min-height:52px;padding:0 14px;font-size:var(--t4)}
+  .row .rn{grid-column:1/9}
+  .row .rf,.row .rp,.row .rk{display:none}
+  .row .rl{grid-column:9/13}
+  .row[aria-expanded="true"]{min-height:150px}
+  .row[aria-expanded="true"] .rd{font-size:var(--t5)}
+  .close{grid-template-columns:1fr 1fr;grid-auto-rows:22vw;gap:6px}
+  .c-head{grid-column:1/3;grid-row:span 2}
+  .c-head .h2{font-size:9vw}
+  .c-lat,.c-tracks,.c-cuts{grid-column:1/3;grid-row:span 3}
+  .c-rack,.c-undo,.c-search,.c-flip{grid-column:span 1;grid-row:span 3}
+  .ct figcaption b{font-size:var(--t5)}
+  .faq{grid-template-columns:1fr}
+  .qs{grid-column:1/-1}
+  .ans{display:none}
+  .q .inline{grid-column:2;line-height:1.35;color:var(--ink);padding-top:8px}
+  .q[aria-selected="true"] .inline{display:block}
+  .q .inline{font-size:var(--t4)}
+  .foot{grid-template-columns:1fr 1fr;gap:6px}
+  .foot>*{min-height:120px;padding:16px}
+  .f-ig{grid-column:1/3;min-height:140px;order:-1}
+  .f-nav,.f-help{grid-column:span 1}
+  .f-say{grid-column:1/3}
+  .cards{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (prefers-reduced-motion:reduce){
+  .shutter,.shutter img{animation:none}
+  .rise,.rise.pre{transition:opacity 200ms ease;transform:none}
+  .press:active{transform:none}
+  .lb[open]{animation:none}
+}
+</style>
+</head>
+<body>
+
+<!-- NEN STUDIO > PLUG-INS > M4L. Hash tokens: #home #plug-ins #plug-ins-m4l #plug-ins-m4l-<device> #board #close #support -->
+<nav class="top" id="home" aria-label="Main">
+  <a class="mark press" href="/" aria-label="NEN STUDIO home">
+    <svg viewBox="0 0 120 40" aria-hidden="true"><text x="0" y="33" font-family="Archivo, Arial, sans-serif" font-weight="900" font-size="40" style="font-variation-settings:'wdth' 125" fill="#0c0c0b" textLength="120" lengthAdjust="spacingAndGlyphs">NEN</text></svg>
+  </a>
+  <div class="links">
+    <a href="/plug-ins/m4l" data-i18n="nav.devices">Plug-ins › M4L</a>
+    <a class="wide-only" href="/support" data-i18n="nav.support">Support</a>
+    <span class="spacer"></span>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="ko" aria-pressed="false">KO</button>
+      <button type="button" data-lang="ja" aria-pressed="false">JA</button>
+    </div>
+  </div>
+  <a class="act press" href="https://nodnxd.gumroad.com" target="_blank" rel="noopener" data-i18n="nav.buy">Buy on Gumroad</a>
+</nav>
+
+<div class="view" id="v-home">
+<header class="hero">
+  <div class="name"><h1 class="x">NEN</h1></div>
+  <div class="pair">
+    <p class="say bg-surface" data-i18n="hero.say">Three devices that fix the small frictions in a Live set.</p>
+    <a class="say amber press" href="/plug-ins/m4l">
+      <span data-i18n="hero.drag">Drag one into Live. No installer.</span>
+      <span class="go" data-i18n="hero.go">See the devices →</span>
+    </a>
+  </div>
+</header>
+</div>
+
+<main>
+  <div class="view" id="v-plug" hidden>
+  <!-- PLUG-INS > M4L -->
+  <section class="sec" id="plug-ins-m4l" aria-labelledby="dev-h">
+    <span id="plug-ins" class="sr">Plug-ins</span>
+    <div class="dhead band bg-racks">
+      <h2 class="h2 rise" id="dev-h"><span class="soft"><a class="crumb" href="/">NEN STUDIO</a> › <span data-i18n="dev.h1">Plug-ins › M4L</span></span><span data-i18n="dev.h2">Three devices.</span></h2>
+      <a class="buy press rise" id="buy" href="https://nodnxd.gumroad.com/l/setmonitor" target="_blank" rel="noopener"><span id="buy-l">Buy Set Monitor</span><span class="num" id="buy-p">$29</span></a>
+    </div>
+    <div class="dbody">
+      <div class="tabs" role="tablist" aria-label="Devices">
+        <button class="tab press" role="tab" id="t-set-monitor" aria-controls="p-set-monitor" aria-selected="true" data-dev="set-monitor"><b>Set Monitor</b><span class="num">v4.11 · $29</span></button>
+        <button class="tab press" role="tab" id="t-strip-silence" aria-controls="p-strip-silence" aria-selected="false" tabindex="-1" data-dev="strip-silence"><b>Strip Silence</b><span class="num">v1.1 · $19</span></button>
+        <button class="tab press" role="tab" id="t-drum-slicer" aria-controls="p-drum-slicer" aria-selected="false" tabindex="-1" data-dev="drum-slicer"><b>Drum Slicer</b><span class="num">v1.2.0 · $29</span></button>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-set-monitor" aria-labelledby="t-set-monitor">
+        <ul class="bands">
+          <li><span class="v">LATENCY</span><span class="t"><span data-i18n="b.sm1t">Set latency, and who causes it</span><span class="n" data-i18n="b.sm1n">Whole-set delay in ms and samples, with the slowest path and the plug-in behind it.</span></span></li>
+          <li><span class="v">MIXER</span><span class="t"><span data-i18n="b.sm2t">Every track in one window</span><span class="n" data-i18n="b.sm2n">Tracks, groups and returns with inserts, fader, pan, mute and solo.</span></span></li>
+          <li><span class="v">METER</span><span class="t"><span data-i18n="b.sm3t">Fader and real level side by side</span><span class="n" data-i18n="b.sm3n">Each track shows its fader dB next to the level it actually plays at.</span></span></li>
+          <li><span class="v">ADD</span><span class="t"><span data-i18n="b.sm4t">Load a plug-in by name</span><span class="n" data-i18n="b.sm4n">Type part of a name and press Return to put it on the track.</span></span></li>
+          <li><span class="v">SNAPSHOT</span><span class="t"><span data-i18n="b.sm5t">Compare a mix, check loudness</span><span class="n" data-i18n="b.sm5n">Save the mix before a change and compare after. The main meter reads LUFS.</span></span></li>
+        </ul>
+        <figure class="win"><img src="/img/ui/set-monitor-list.png" alt="Set Monitor track list: fader, pan, peak and latency per track, set latency 164.90 ms" width="910" height="240" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <ul class="cards" aria-label="Set Monitor cards">
+          <li><button class="card" type="button"><img src="/img/feat/sm-1.jpg" alt="Set Monitor. Mixer, inserts, latency, LUFS. Version 4.11, $29." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/sm-2.jpg" alt="Every track. One window." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/sm-3.jpg" alt="Find the late plugin. Worst: Pro-Q 4, 106.67 ms. Set: 164.90 ms." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/sm-4.jpg" alt="Type a name. Hit return." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/sm-5.jpg" alt="One drag equals one undo." width="1080" height="1350" loading="lazy"></button></li>
+        </ul>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-strip-silence" aria-labelledby="t-strip-silence" hidden>
+        <ul class="bands">
+          <li><span class="v">STRIP</span><span class="t"><span data-i18n="b.ss1t">Cut the near-silent parts</span><span class="n" data-i18n="b.ss1n">Removes the parts of a vocal clip you can barely hear, in place in Arrangement.</span></span></li>
+          <li><span class="v">THRESHOLD</span><span class="t"><span data-i18n="b.ss2t">Cut level and minimum gap</span><span class="n" data-i18n="b.ss2n">The level is set against the loudest part (−38 dB by default). Gaps under 250 ms stay.</span></span></li>
+          <li><span class="v">PRE / POST</span><span class="t"><span data-i18n="b.ss3t">Room around each phrase</span><span class="n" data-i18n="b.ss3n">Keeps 40 ms before each phrase and a 150 ms tail after it.</span></span></li>
+          <li><span class="v">BREATH</span><span class="t"><span data-i18n="b.ss4t">Keep, duck or cut breaths</span><span class="n" data-i18n="b.ss4n">Duck lowers breaths by 12 dB instead of removing them.</span></span></li>
+          <li><span class="v">TRACKS</span><span class="t"><span data-i18n="b.ss5t">Several tracks, one undo</span><span class="n" data-i18n="b.ss5n">Run it on many tracks at once. Undo last puts every clip back.</span></span></li>
+        </ul>
+        <figure class="win"><img src="/img/ui/strip-silence.png" alt="Strip Silence device in Live" width="906" height="334" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <ul class="cards" aria-label="Strip Silence cards">
+          <li><button class="card" type="button"><img src="/img/feat/ss-1.jpg" alt="Strip Silence. Gaps, breaths, every track, undo. Version 1.1, $19." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ss-2.jpg" alt="One click. All back." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ss-3.jpg" alt="3 cuts. 1.3 seconds." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ss-4.jpg" alt="Keep the breaths." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ss-5.jpg" alt="See the cut. Then cut." width="1080" height="1350" loading="lazy"></button></li>
+        </ul>
+        <p class="cards-note">Demo vocal: “I Miss You” by snowflake (ccMixter), CC BY 3.0</p>
+      </div>
+
+      <div class="panel" role="tabpanel" id="p-drum-slicer" aria-labelledby="t-drum-slicer" hidden>
+        <ul class="bands">
+          <li><span class="v">EXTRACT</span><span class="t"><span data-i18n="b.ds1t">Every hit from a drum loop</span><span class="n" data-i18n="b.ds1n">Finds each hit and cuts it from the original audio.</span></span></li>
+          <li><span class="v">GROUPS</span><span class="t"><span data-i18n="b.ds2t">Named by what plays</span><span class="n" data-i18n="b.ds2n">Each slice is named for what sounds in it: Kick, Snare, Kick+Hat.</span></span></li>
+          <li><span class="v">OUTPUT</span><span class="t"><span data-i18n="b.ds3t">Kit, tracks or audio</span><span class="n" data-i18n="b.ds3n">A Drum Rack with MIDI, separate tracks with MIDI, or separate audio tracks.</span></span></li>
+          <li><span class="v">FLIP</span><span class="t"><span data-i18n="b.ds4t">Same hits, new pattern</span><span class="n" data-i18n="b.ds4n">Rerolls the hits into a new pattern. Original brings the loop back.</span></span></li>
+          <li><span class="v">LOCAL</span><span class="t"><span data-i18n="b.ds5t">Nothing leaves your computer</span><span class="n" data-i18n="b.ds5n">It runs inside Live and uploads nothing.</span></span></li>
+        </ul>
+        <figure class="win"><img src="/img/ui/drum-slicer.png" alt="Drum Slicer device in Live" width="892" height="244" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <ul class="cards" aria-label="Drum Slicer cards">
+          <li><button class="card" type="button"><img src="/img/feat/ds-1.jpg" alt="Drum Slicer. Audio, kit, tracks, flip. Version 1.2.0, $29." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ds-2.jpg" alt="Every hit. One click." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ds-3.jpg" alt="Grouped by what plays." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ds-4.jpg" alt="All tracks equal the loop." width="1080" height="1350" loading="lazy"></button></li>
+          <li><button class="card" type="button"><img src="/img/feat/ds-5.jpg" alt="Same hits. New pattern." width="1080" height="1350" loading="lazy"></button></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+
+
+  </div>
+  <div class="view" id="v-support" hidden>
+  <!-- support -->
+  <section class="sec" id="support" aria-label="Support">
+    <div class="band bg-pads">
+      <h2 class="h2"><span class="soft"><a class="crumb" href="/">NEN STUDIO</a> › <span data-i18n="nav.support">Support</span></span><span data-i18n="faq.h">Common questions</span></h2>
+    </div>
+    <div class="faq">
+      <div class="qs" role="tablist" aria-orientation="vertical" id="qs"></div>
+      <div class="ans" aria-live="polite"><p id="ans"></p></div>
+    </div>
+  </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="f-say">
+    <p data-i18n="f.say">Small tools for people who finish songs in Live.</p>
+    <small>© 2026 NEN STUDIO</small>
+  </div>
+  <nav class="f-nav" aria-label="Footer">
+    <ul>
+      <li><a href="/">NEN STUDIO</a></li>
+      <li><a href="/plug-ins/m4l" data-i18n="nav.devices">Plug-ins › M4L</a></li>
+      <li><a href="/plug-ins/m4l/set-monitor">Set Monitor</a></li>
+      <li><a href="/plug-ins/m4l/strip-silence">Strip Silence</a></li>
+      <li><a href="/plug-ins/m4l/drum-slicer">Drum Slicer</a></li>
+      <li><a href="/support" data-i18n="nav.support">Support</a></li>
+    </ul>
+  </nav>
+  <div class="f-help"><span data-i18n="f.help">Help: reply to your Gumroad receipt.</span><a href="https://nodnxd.gumroad.com" target="_blank" rel="noopener">nodnxd.gumroad.com</a></div>
+  <a class="f-ig press" href="https://www.instagram.com/nenaudio/" target="_blank" rel="noopener" aria-label="NEN on Instagram, @nenaudio">
+    <span class="ig-l">Instagram</span>
+    <b>@NENAUDIO</b>
+    <svg viewBox="0 0 56 56" fill="none" aria-hidden="true"><path d="M8 28h38M30 12l16 16-16 16" stroke="currentColor" stroke-width="4"/></svg>
+  </a>
+</footer>
+
+<dialog class="lb" id="lb"><img src="" alt=""><button type="button" data-close data-i18n="lb.close">Close</button></dialog>
+
+<script>
+(function(){
+  var DEV={
+    'set-monitor':{name:'Set Monitor',price:'$29',url:'https://nodnxd.gumroad.com/l/setmonitor'},
+    'strip-silence':{name:'Strip Silence',price:'$19',url:'https://nodnxd.gumroad.com/l/stripsilence'},
+    'drum-slicer':{name:'Drum Slicer',price:'$29',url:'https://nodnxd.gumroad.com/l/drumslicer'}
+  };
+  var T={
+    ko:{
+      'nav.devices':'플러그인 › M4L','b.sm1t':'세트 레이턴시와 그 원인','b.sm1n':'세트 전체 지연을 ms와 샘플로, 가장 느린 경로와 원인 플러그인까지 보여줘요.','b.sm2t':'모든 트랙을 한 창에서','b.sm2n':'트랙, 그룹, 리턴의 인서트, 페이더, 팬, 뮤트, 솔로.','b.sm3t':'페이더와 실제 레벨을 나란히','b.sm3n':'트랙마다 페이더 dB와 실제로 나가는 레벨을 같이 보여줘요.','b.sm4t':'이름으로 플러그인 넣기','b.sm4n':'이름 일부를 치고 Return을 누르면 트랙에 들어가요.','b.sm5t':'믹스 비교와 라우드니스','b.sm5n':'바꾸기 전 믹스를 저장해 두고 비교해요. 메인 미터는 LUFS를 보여줘요.','b.ss1t':'거의 안 들리는 부분 자르기','b.ss1n':'보컬 클립에서 거의 들리지 않는 부분을 어레인지먼트에서 바로 잘라요.','b.ss2t':'컷 기준과 최소 간격','b.ss2n':'가장 큰 부분 기준으로 레벨을 정해요(기본 −38 dB). 250 ms보다 짧은 쉼은 남겨요.','b.ss3t':'프레이즈 앞뒤 여유','b.ss3n':'프레이즈 앞 40 ms와 뒤 150 ms 꼬리를 남겨요.','b.ss4t':'숨소리: 유지, 줄이기, 자르기','b.ss4n':'줄이기는 숨소리를 지우지 않고 12 dB 낮춰요.','b.ss5t':'여러 트랙, 실행 취소 한 번','b.ss5n':'여러 트랙에 한 번에 적용해요. Undo last로 모든 클립이 돌아와요.','b.ds1t':'드럼 루프의 모든 히트','b.ds1n':'히트를 하나씩 찾아 원본 오디오에서 잘라내요.','b.ds2t':'소리로 이름 붙이기','b.ds2n':'슬라이스마다 들리는 소리로 이름이 붙어요: Kick, Snare, Kick+Hat.','b.ds3t':'킷, 트랙, 오디오','b.ds3n':'Drum Rack+MIDI, 개별 트랙+MIDI, 개별 오디오 트랙 중에서 골라요.','b.ds4t':'같은 히트, 새 패턴','b.ds4n':'같은 히트로 새 패턴을 만들어요. Original로 원래 루프로 돌아가요.','b.ds5t':'컴퓨터 밖으로 안 나가요','b.ds5n':'Live 안에서 돌아가고 아무것도 올리지 않아요.','nav.board':'세션 뷰','nav.close':'가까이','nav.support':'지원','nav.buy':'Gumroad에서 구매',
+      'hero.studio':'플러그인 스튜디오. 첫 라인은 Max for Live.','hero.cap':'Set Monitor 믹서 뷰','hero.say':'Live 세트의 작은 불편을 고치는 디바이스 세 개.','hero.drag':'Live에 끌어다 놓으면 끝. 설치 프로그램 없음.','hero.go':'디바이스 보기 →',
+      'dev.h1':'플러그인 › M4L','dev.h2':'디바이스 세 개.','buy':'구매',
+      'v.all':'전부','v.keep':'유지','v.click':'1클릭','v.orig':'원본','v.local':'로컬',
+      'sm.1t':'세트 레이턴시와 그 원인','sm.1n':'세트 전체 지연, 가장 느린 경로, 가장 무거운 플러그인.','sm.2t':'모든 트랙을 한 창에서','sm.2n':'페이더, 팬, 뮤트, 솔로, 피크, 인서트. 그룹과 리턴 포함.','sm.3t':'이름으로 플러그인 추가','sm.3n':'이름 일부를 치고 Return을 누르면 트랙에 로드돼요.','sm.4t':'드래그 한 번은 실행 취소 한 번','sm.4n':'페이더를 움직인 한 번이 실행 취소 한 번으로 돌아와요.','sm.5t':'메인 라우드니스','sm.5n':'스냅샷과 비교로 믹스 전후를 확인해요.',
+      'ss.1t':'컷 기준','ss.1n':'클립에서 가장 큰 부분을 기준으로 재요.','ss.2t':'최소 간격','ss.2n':'더 짧은 쉼은 남겨서 프레이징이 끊기지 않아요.','ss.3t':'앞과 뒤 여유','ss.3n':'소리 앞의 여유와 뒤에 남기는 꼬리.','ss.4t':'숨소리: 유지, 줄이기, 자르기','ss.4n':'줄이기는 지우지 않고 12dB 낮춰요.','ss.5t':'마지막 실행 취소','ss.5n':'한 번 누르면 모든 클립이 돌아와요.',
+      'ds.1t':'모든 히트 추출','ds.1n':'드럼 루프 클립을 고르고 Extract를 누르세요.','ds.2t':'울리는 소리로 묶기','ds.2n':'슬라이스마다 들리는 소리로 이름이 붙어요: Kick, Snare, Kick+Hat.','ds.3t':'킷, 트랙, 오디오','ds.3n':'루프를 Drum Rack, 개별 트랙, 오디오로 다시 만들어요.','ds.4t':'모든 트랙을 더하면 원래 루프','ds.4n':'원본 오디오에서 잘라요. 가공도 분리도 없고, 피크를 지키며 다듬어요.','ds.5t':'업로드 없음','ds.5n':'Live 안에서 돌아가요. Flip은 같은 히트로 새 패턴을 만들어요.',
+      'win.cap':'Live에서 보이는 실제 디바이스.',
+      'board.say':'Set Monitor로 본 실제 세션: 트랙 32개, 세트 레이턴시 <b>164.90 ms</b>. 트랙을 열면 무엇이 걸려 있는지 보여요.','board.note':'위 카드에 나온 세션의 트랙 이름과 수치. 열: 페이더, 팬, 피크, 레이턴시.',
+      'close.h':'가까이서.','cl.1b':'3번 컷, 1.3초','cl.1s':'리드 보컬에 Strip Silence','cl.2b':'느린 플러그인 찾기','cl.2s':'Set Monitor가 범인을 짚어요','cl.3b':'소리로 이름 붙이기','cl.3s':'Drum Slicer가 만든 킷','cl.4b':'마지막 실행 취소','cl.4s':'모든 클립 복구','cl.5b':'입력하고 Return','cl.5s':'플러그인 추가','cl.6b':'리롤','cl.6s':'같은 히트, 새 패턴','cl.7b':'더하면 원래 루프','cl.7s':'Kick, Kick+Crash, Kick+Hat',
+      'faq.h':'자주 묻는 질문','f.say':'Live에서 곡을 끝내는 사람을 위한 작은 도구.','f.city':'서울','f.help':'문의: Gumroad 영수증에 회신해 주세요.','f.go':'디바이스 받기','lb.close':'닫기'
+    },
+    ja:{
+      'nav.devices':'プラグイン › M4L','b.sm1t':'セットのレイテンシーと原因','b.sm1n':'セット全体の遅延をmsとサンプルで、最も遅い経路と原因のプラグインまで表示します。','b.sm2t':'全トラックを1つのウィンドウで','b.sm2n':'トラック、グループ、リターンのインサート、フェーダー、パン、ミュート、ソロ。','b.sm3t':'フェーダーと実際のレベルを並べて','b.sm3n':'各トラックのフェーダーdBと実際に出ているレベルを並べて表示します。','b.sm4t':'名前でプラグインを読み込む','b.sm4n':'名前の一部を入力してReturnでトラックに入ります。','b.sm5t':'ミックスの比較とラウドネス','b.sm5n':'変更前のミックスを保存して比較できます。メインメーターはLUFS表示。','b.ss1t':'ほぼ聞こえない部分をカット','b.ss1n':'ボーカルクリップのほぼ聞こえない部分を、アレンジメント上でそのままカットします。','b.ss2t':'カット基準と最小ギャップ','b.ss2n':'最も大きい部分を基準にレベルを決めます(初期値 −38 dB)。250 ms未満の間は残します。','b.ss3t':'フレーズ前後の余白','b.ss3n':'各フレーズの前に40 ms、後ろに150 msのテールを残します。','b.ss4t':'ブレス:残す、下げる、切る','b.ss4n':'下げるはブレスを消さずに12 dB下げます。','b.ss5t':'複数トラック、アンドゥ1回','b.ss5n':'複数トラックに一度に適用。Undo lastで全クリップが戻ります。','b.ds1t':'ドラムループのすべてのヒット','b.ds1n':'ヒットを一つずつ見つけ、元のオーディオから切り出します。','b.ds2t':'鳴っている音で命名','b.ds2n':'スライスごとに聞こえる音で名前が付きます:Kick、Snare、Kick+Hat。','b.ds3t':'キット、トラック、オーディオ','b.ds3n':'Drum Rack+MIDI、個別トラック+MIDI、個別オーディオトラックから選べます。','b.ds4t':'同じヒット、新しいパターン','b.ds4n':'同じヒットで新しいパターンを作ります。Originalで元のループに戻ります。','b.ds5t':'外部に送信しません','b.ds5n':'Liveの中で動作し、何もアップロードしません。','nav.board':'セッション','nav.close':'クローズアップ','nav.support':'サポート','nav.buy':'Gumroadで購入',
+      'hero.studio':'プラグインのスタジオ。最初のラインはMax for Live。','hero.cap':'Set Monitor ミキサービュー','hero.say':'Liveセットの小さな不便を直す3つのデバイス。','hero.drag':'Liveにドラッグするだけ。インストーラーなし。','hero.go':'デバイスを見る →',
+      'dev.h1':'プラグイン › M4L','dev.h2':'3つのデバイス。','buy':'購入',
+      'v.all':'全部','v.keep':'残す','v.click':'1クリック','v.orig':'原音','v.local':'ローカル',
+      'sm.1t':'セットのレイテンシーと原因','sm.1n':'セット全体の遅延、最も遅い経路、最も重いプラグイン。','sm.2t':'全トラックを1つのウィンドウで','sm.2n':'フェーダー、パン、ミュート、ソロ、ピーク、インサート。グループとリターンも。','sm.3t':'名前でプラグインを追加','sm.3n':'名前の一部を入力してReturnでトラックに読み込みます。','sm.4t':'1回のドラッグは1回のアンドゥ','sm.4n':'フェーダー操作1回が1回のアンドゥで戻ります。','sm.5t':'メインのラウドネス','sm.5n':'スナップショットと差分でミックスの前後を比べられます。',
+      'ss.1t':'カットの基準','ss.1n':'クリップの最も大きい部分を基準に測ります。','ss.2t':'最小ギャップ','ss.2n':'短い間は残すので、フレーズが途切れません。','ss.3t':'前後の余白','ss.3n':'音の前の余白と、後に残すテール。','ss.4t':'ブレス:残す、下げる、切る','ss.4n':'下げるは消さずに12dB下げます。','ss.5t':'直前を元に戻す','ss.5n':'1クリックで全クリップが戻ります。',
+      'ds.1t':'すべてのヒットを抽出','ds.1n':'ドラムループのクリップを選んでExtractを押します。','ds.2t':'鳴っている音でグループ化','ds.2n':'スライスごとに聞こえる音で名前が付きます:Kick、Snare、Kick+Hat。','ds.3t':'キット、トラック、オーディオ','ds.3n':'ループをDrum Rack、個別トラック、オーディオとして組み直します。','ds.4t':'全トラックを足すと元のループ','ds.4n':'元のオーディオから切り出します。加工も分離もせず、ピークを守ってトリム。','ds.5t':'アップロードなし','ds.5n':'Liveの中で動きます。Flipは同じヒットで新しいパターンを作ります。',
+      'win.cap':'Liveでの実際のデバイス。',
+      'board.say':'Set Monitorで見た実際のセッション:32トラック、セットレイテンシー<b>164.90 ms</b>。トラックを開くと中身が見えます。','board.note':'上のカードと同じセッションのトラック名と数値。列:フェーダー、パン、ピーク、レイテンシー。',
+      'close.h':'クローズアップ。','cl.1b':'3カット、1.3秒','cl.1s':'リードボーカルにStrip Silence','cl.2b':'遅いプラグインを探す','cl.2s':'Set Monitorが原因を示します','cl.3b':'音で名前を付ける','cl.3s':'Drum Slicerのキット','cl.4b':'直前を元に戻す','cl.4s':'全クリップが戻る','cl.5b':'入力してReturn','cl.5s':'プラグインを追加','cl.6b':'リロール','cl.6s':'同じヒット、新しいパターン','cl.7b':'足すと元のループ','cl.7s':'Kick、Kick+Crash、Kick+Hat',
+      'faq.h':'よくある質問','f.say':'Liveで曲を仕上げる人のための小さな道具。','f.city':'ソウル','f.help':'お問い合わせ:Gumroadのレシートに返信してください。','f.go':'デバイスを入手','lb.close':'閉じる'
+    }
+  };
+  var FAQ={
+    en:[
+      ['How do I install a device?','Drag the .amxd file onto a track in Live. There is no installer.'],
+      ['What do I need?','Ableton Live with Max for Live.'],
+      ['Does Drum Slicer send my audio anywhere?','No. It runs locally inside Live and uploads nothing.'],
+      ['Can I take back a Strip Silence pass?','Yes. Undo last puts every clip back in one step.'],
+      ['Which languages are the manuals in?','English, Korean and Japanese.'],
+      ['Where do I buy, and how do updates reach me?','On Gumroad. New versions appear in your Gumroad library next to the purchase.'],
+      ['How do I get help?','Reply to your Gumroad receipt and it reaches us.']
+    ],
+    ko:[
+      ['디바이스는 어떻게 설치하나요?','.amxd 파일을 Live의 트랙에 끌어다 놓으면 돼요. 설치 프로그램은 없어요.'],
+      ['무엇이 필요한가요?','Max for Live가 있는 Ableton Live.'],
+      ['Drum Slicer가 오디오를 어딘가로 보내나요?','아니요. Live 안에서 로컬로 돌아가고 아무것도 올리지 않아요.'],
+      ['Strip Silence 작업을 되돌릴 수 있나요?','네. Undo last 한 번이면 모든 클립이 돌아와요.'],
+      ['매뉴얼은 어떤 언어로 있나요?','영어, 한국어, 일본어.'],
+      ['어디서 사고, 업데이트는 어떻게 받나요?','Gumroad에서요. 새 버전은 Gumroad 라이브러리의 구매 항목에 올라와요.'],
+      ['도움은 어떻게 받나요?','Gumroad 영수증에 회신하면 저희에게 와요.']
+    ],
+    ja:[
+      ['デバイスのインストール方法は?','.amxdファイルをLiveのトラックにドラッグします。インストーラーはありません。'],
+      ['必要なものは?','Max for Live付きのAbleton Live。'],
+      ['Drum Slicerはオーディオをどこかへ送りますか?','いいえ。Liveの中でローカルに動き、何もアップロードしません。'],
+      ['Strip Silenceの処理は戻せますか?','はい。Undo lastで全クリップが一度に戻ります。'],
+      ['マニュアルの言語は?','英語、韓国語、日本語。'],
+      ['どこで買えて、アップデートはどう届きますか?','Gumroadです。新しいバージョンはGumroadライブラリの購入品に追加されます。'],
+      ['サポートは?','Gumroadのレシートに返信すると私たちに届きます。']
+    ]
+  };
+  // Real figures from the user's Set Monitor session (cards: Find the late plugin, Every track. One window.)
+  var ROWS=[
+    {n:'harmony group',f:'0.0',p:'C',k:'−13.05',l:'106.67',ins:'SM Tap'},
+    {n:'h _ ep (b016)',f:'−4.6',p:'C',k:'−17.22',l:'49.79',ins:'FabFilt…, Timele…, soothe3, UADx…, SSL Fu…, SM Tap'},
+    {n:'h _ synth 1',f:'−13.1',p:'22R',k:'−19.61',l:'0.00',ins:'Pro-Q 4, Pro-C 3, Pro-C 3, SM Tap'},
+    {n:'h _ synth 2',f:'−6.3',p:'32L',k:'−19.18',l:'106.67',ins:'FabFilt…, Timele…, Saturn 2, Raum, SM Tap'},
+    {n:'h _ synth 3',f:'−3.8',p:'C',k:'−17.08',l:'1.96',ins:'Pro-Q 4, S1 Ima…, MB Mix…, UADx…, SM Tap'},
+    {n:'h _ synth 4',f:'4.8',p:'C',k:'−inf',l:'0.00',m:1,ins:'SM Tap'},
+    {n:'h _ synth 5',f:'0.1',p:'C',k:'−inf',l:'0.00',m:1,ins:'SM Tap'},
+    {n:'h _ synth 6',f:'−1.1',p:'C',k:'−inf',l:'0.00',m:1,ins:'SM Tap'},
+    {n:'h _ gtr 1',f:'−13.1',p:'17L',k:'−inf',l:'0.00',m:1,ins:''}
+  ];
+  var RD={
+    en:function(r){return 'Fader '+r.f+' dB · Pan '+r.p+' · Peak '+r.k+' dB · Latency '+r.l+' ms'+(r.m?' · Muted':'')+(r.ins?'<br>Inserts: '+r.ins:'')},
+    ko:function(r){return '페이더 '+r.f+' dB · 팬 '+r.p+' · 피크 '+r.k+' dB · 레이턴시 '+r.l+' ms'+(r.m?' · 뮤트':'')+(r.ins?'<br>인서트: '+r.ins:'')},
+    ja:function(r){return 'フェーダー '+r.f+' dB · パン '+r.p+' · ピーク '+r.k+' dB · レイテンシー '+r.l+' ms'+(r.m?' · ミュート':'')+(r.ins?'<br>インサート: '+r.ins:'')}
+  };
+  var lang='en';
+  try{var s=localStorage.getItem('nen-lang');if(s&&T[s])lang=s;}catch(e){}
+
+  // capture English
+  var nodes=[].slice.call(document.querySelectorAll('[data-i18n]'));
+  nodes.forEach(function(n){n.setAttribute('data-en',n.innerHTML)});
+
+  /* tabs */
+  var tabs=[].slice.call(document.querySelectorAll('.tab'));
+  var cur='set-monitor';
+  function buyLabel(){var b=lang==='en'?'Buy ':(T[lang].buy+' ');return lang==='en'?b+DEV[cur].name:DEV[cur].name+' '+T[lang].buy}
+  function selectDev(id,focus){
+    if(!DEV[id])return;cur=id;
+    tabs.forEach(function(t){var on=t.getAttribute('data-dev')===id;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;document.getElementById(t.getAttribute('aria-controls')).hidden=!on;if(on&&focus)t.focus();});
+    document.getElementById('buy').href=DEV[id].url;
+    document.getElementById('buy-l').textContent=buyLabel();
+    document.getElementById('buy-p').textContent=DEV[id].price;
+  }
+  tabs.forEach(function(t,i){
+    t.addEventListener('click',function(){selectDev(t.getAttribute('data-dev'));try{history.replaceState(null,'','/plug-ins/m4l/'+t.getAttribute('data-dev'))}catch(e){}});
+    t.addEventListener('keydown',function(e){var k=e.key,j=i;
+      if(k==='ArrowDown'||k==='ArrowRight')j=(i+1)%tabs.length;else if(k==='ArrowUp'||k==='ArrowLeft')j=(i+tabs.length-1)%tabs.length;else return;
+      e.preventDefault();selectDev(tabs[j].getAttribute('data-dev'),true);});
+  });
+
+  /* faq */
+  var qs=document.getElementById('qs'),ans=document.getElementById('ans'),sel=0;
+  function drawFaq(){
+    [].slice.call(qs.querySelectorAll('.q')).forEach(function(q){q.remove()});
+    FAQ[lang].forEach(function(p,i){
+      var q=document.createElement('button');q.type='button';q.className='q';q.setAttribute('role','tab');q.setAttribute('aria-selected',i===sel);
+      q.innerHTML='<span>'+p[0]+'</span><span class="inline">'+p[1]+'</span>';
+      function pick(){if(sel===i)return;sel=i;
+        [].slice.call(qs.querySelectorAll('.q')).forEach(function(x,j){x.setAttribute('aria-selected',j===i)});
+        ans.classList.add('fade');setTimeout(function(){ans.textContent=FAQ[lang][i][1];ans.classList.remove('fade')},150);}
+      q.addEventListener('click',pick);q.addEventListener('focus',pick);
+      if(window.matchMedia('(hover:hover)').matches)q.addEventListener('mouseenter',pick);
+      qs.appendChild(q);
+    });
+    ans.textContent=FAQ[lang][sel][1];
+  }
+
+  function applyLang(l){
+    lang=l;document.documentElement.lang=l;
+    nodes.forEach(function(n){var k=n.getAttribute('data-i18n');n.innerHTML=(l!=='en'&&T[l][k])?T[l][k]:n.getAttribute('data-en')});
+    [].slice.call(document.querySelectorAll('.lang button')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-lang')===l)});
+    try{localStorage.setItem('nen-lang',l)}catch(e){}
+    selectDev(cur);drawFaq();
+  }
+  [].slice.call(document.querySelectorAll('.lang button')).forEach(function(b){b.addEventListener('click',function(){applyLang(b.getAttribute('data-lang'))})});
+
+  /* views: home, plug-ins page, support page */
+  var V={home:document.getElementById('v-home'),plug:document.getElementById('v-plug'),support:document.getElementById('v-support')};
+  function route(){
+    var path=location.pathname.replace(/\/+$/,''),h=location.hash.slice(1),v='home',m;
+    if((m=path.match(/^\/plug-ins\/m4l\/([a-z-]+)$/))&&DEV[m[1]]){v='plug';selectDev(m[1]);}
+    else if(/^\/plug-ins(\/m4l)?$/.test(path))v='plug';
+    else if(path==='/support')v='support';
+    else if((m=h.match(/^plug-ins-m4l-(.+)$/))&&DEV[m[1]]){v='plug';selectDev(m[1]);}
+    else if(h==='plug-ins'||h==='plug-ins-m4l')v='plug';
+    else if(h==='support')v='support';
+    Object.keys(V).forEach(function(k){V[k].hidden=k!==v});
+    [].slice.call(document.querySelectorAll('.pre')).forEach(function(el){el.classList.remove('pre')});
+    document.title=v==='plug'?'Plug-ins › M4L · NEN STUDIO':v==='support'?'Support · NEN STUDIO':'NEN STUDIO';
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest&&e.target.closest('a[href^="/"]');
+    if(!a||e.metaKey||e.ctrlKey||e.shiftKey||a.target==='_blank')return;
+    e.preventDefault();history.pushState(null,'',a.getAttribute('href'));route();window.scrollTo(0,0);
+  });
+  window.addEventListener('popstate',route);
+
+
+  /* lightbox */
+  var lb=document.getElementById('lb'),lbi=lb.querySelector('img');
+  document.addEventListener('click',function(e){
+    var c=e.target.closest&&e.target.closest('.card');
+    if(c&&lb.showModal){var im=c.querySelector('img');lbi.src=im.getAttribute('src');lbi.alt=im.alt;lb.showModal();return;}
+    if(e.target===lb||(e.target.closest&&e.target.closest('[data-close]')))lb.close();
+  });
+
+  /* entrances: hide only what is below the fold, reveal once */
+  if('IntersectionObserver' in window&&!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+    var items=[].slice.call(document.querySelectorAll('.rise, .bands li, .rows li, .q, .foot > *'));
+    items.forEach(function(el){el.classList.add('rise')});
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting){en.target.classList.remove('pre');io.unobserve(en.target);}})},{rootMargin:'0px 0px -8% 0px'});
+    var vh=window.innerHeight;
+    function arm(){
+      var groups=new Map();
+      items.forEach(function(el){
+        if(el.getBoundingClientRect().top<vh)return;
+        var p=el.parentElement;var k=groups.get(p)||0;groups.set(p,k+1);
+        el.style.setProperty('--d',Math.min(k,6)*70+'ms');el.classList.add('pre');io.observe(el);
+      });
+    }
+    requestAnimationFrame(arm);
+  }
+
+  applyLang(lang);
+  route();
+})();
+</script>
+</body>
+</html>
