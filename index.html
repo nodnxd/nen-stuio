@@ -299,7 +299,7 @@ h1,h2,h3,p{margin:0}
 <header class="hero">
   <div class="name"><h1 class="x">NEN</h1></div>
   <div class="pair">
-    <p class="say bg-surface" data-i18n="hero.say">Three devices that fix the small frictions in a Live set.</p>
+    <p class="say bg-surface" data-i18n="hero.say">Four devices for Ableton Live.</p>
     <a class="say amber press" href="/plug-ins/m4l">
       <span data-i18n="hero.drag">Drag one into Live. No installer.</span>
       <span class="go" data-i18n="hero.go">See the devices →</span>
@@ -314,7 +314,7 @@ h1,h2,h3,p{margin:0}
   <section class="sec" id="plug-ins-m4l" aria-labelledby="dev-h">
     <span id="plug-ins" class="sr">Plug-ins</span>
     <div class="dhead band bg-racks">
-      <h2 class="h2 rise" id="dev-h"><span class="soft"><a class="crumb" href="/">NEN STUDIO</a> › <span data-i18n="dev.h1">Plug-ins › M4L</span></span><span data-i18n="dev.h2">Three devices.</span></h2>
+      <h2 class="h2 rise" id="dev-h"><span class="soft"><a class="crumb" href="/">NEN STUDIO</a> › <span data-i18n="dev.h1">Plug-ins › M4L</span></span><span data-i18n="dev.h2">Four devices.</span></h2>
       <a class="buy press rise" id="buy" href="https://nodnxd.gumroad.com/l/setmonitor" target="_blank" rel="noopener"><span id="buy-l">Buy Set Monitor</span><span class="num" id="buy-p">$29</span></a>
     </div>
     <div class="dbody">
@@ -322,6 +322,7 @@ h1,h2,h3,p{margin:0}
         <button class="tab press" role="tab" id="t-set-monitor" aria-controls="p-set-monitor" aria-selected="true" data-dev="set-monitor"><b>Set Monitor</b><span class="num">v4.11 · $29</span></button>
         <button class="tab press" role="tab" id="t-strip-silence" aria-controls="p-strip-silence" aria-selected="false" tabindex="-1" data-dev="strip-silence"><b>Strip Silence</b><span class="num">v1.1 · $19</span></button>
         <button class="tab press" role="tab" id="t-drum-slicer" aria-controls="p-drum-slicer" aria-selected="false" tabindex="-1" data-dev="drum-slicer"><b>Drum Slicer</b><span class="num">v1.2.0 · $29</span></button>
+        <button class="tab press" role="tab" id="t-elsewhere" aria-controls="p-elsewhere" aria-selected="false" tabindex="-1" data-dev="elsewhere"><b>Elsewhere</b><span class="num">v0.7 · $29</span></button>
       </div>
 
       <div class="panel" role="tabpanel" id="p-set-monitor" aria-labelledby="t-set-monitor">
@@ -378,6 +379,18 @@ h1,h2,h3,p{margin:0}
           <li><button class="card" type="button"><img src="/img/feat/ds-5.jpg" alt="Same hits. New pattern." width="1080" height="1350" loading="lazy"></button></li>
         </ul>
       </div>
+
+      <div class="panel" role="tabpanel" id="p-elsewhere" aria-labelledby="t-elsewhere" hidden>
+        <ul class="bands">
+          <li><span class="v">PLACE</span><span class="t"><span data-i18n="b.ew1t">14 places to put a sound</span><span class="n" data-i18n="b.ew1n">Outside the club, a bathroom stall, a phone speaker, underwater, a megaphone, a huge space.</span></span></li>
+          <li><span class="v">MATERIAL</span><span class="t"><span data-i18n="b.ew2t">Wood, concrete or metal</span><span class="n" data-i18n="b.ew2n">The material shapes the body of the sound, not only the reverb tail.</span></span></li>
+          <li><span class="v">WALK</span><span class="t"><span data-i18n="b.ew3t">One knob from here to there</span><span class="n" data-i18n="b.ew3n">Pick a second place and turn Walk. Automate it for transitions, like walking into the club.</span></span></li>
+          <li><span class="v">MACROS</span><span class="t"><span data-i18n="b.ew4t">Distance, Dirt, Room, Walk</span><span class="n" data-i18n="b.ew4n">Four knobs for the common moves. The display draws the room and moves with your audio.</span></span></li>
+          <li><span class="v">EDIT</span><span class="t"><span data-i18n="b.ew5t">Every preset is a starting point</span><span class="n" data-i18n="b.ew5n">39 parameters across Tone, Drive, Space, Motion and Material, all automatable.</span></span></li>
+        </ul>
+        <figure class="win"><img src="/img/ui/elsewhere.png" alt="Elsewhere device in Live: Outside Club, Concrete" width="1254" height="385" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+      </div>
+
     </div>
   </section>
 
@@ -410,6 +423,7 @@ h1,h2,h3,p{margin:0}
       <li><a href="/plug-ins/m4l/set-monitor">Set Monitor</a></li>
       <li><a href="/plug-ins/m4l/strip-silence">Strip Silence</a></li>
       <li><a href="/plug-ins/m4l/drum-slicer">Drum Slicer</a></li>
+      <li><a href="/plug-ins/m4l/elsewhere">Elsewhere</a></li>
       <li><a href="/support" data-i18n="nav.support">Support</a></li>
     </ul>
   </nav>
@@ -428,13 +442,14 @@ h1,h2,h3,p{margin:0}
   var DEV={
     'set-monitor':{name:'Set Monitor',price:'$29',url:'https://nodnxd.gumroad.com/l/setmonitor'},
     'strip-silence':{name:'Strip Silence',price:'$19',url:'https://nodnxd.gumroad.com/l/stripsilence'},
-    'drum-slicer':{name:'Drum Slicer',price:'$29',url:'https://nodnxd.gumroad.com/l/drumslicer'}
+    'drum-slicer':{name:'Drum Slicer',price:'$29',url:'https://nodnxd.gumroad.com/l/drumslicer'},
+    'elsewhere':{name:'Elsewhere',price:'$29',url:'https://nodnxd.gumroad.com/l/elsewhere'}
   };
   var T={
     ko:{
-      'nav.devices':'플러그인 › M4L','b.sm1t':'세트 레이턴시와 그 원인','b.sm1n':'세트 전체 지연을 ms와 샘플로, 가장 느린 경로와 원인 플러그인까지 보여줘요.','b.sm2t':'모든 트랙을 한 창에서','b.sm2n':'트랙, 그룹, 리턴의 인서트, 페이더, 팬, 뮤트, 솔로.','b.sm3t':'페이더와 실제 레벨을 나란히','b.sm3n':'트랙마다 페이더 dB와 실제로 나가는 레벨을 같이 보여줘요.','b.sm4t':'이름으로 플러그인 넣기','b.sm4n':'이름 일부를 치고 Return을 누르면 트랙에 들어가요.','b.sm5t':'믹스 비교와 라우드니스','b.sm5n':'바꾸기 전 믹스를 저장해 두고 비교해요. 메인 미터는 LUFS를 보여줘요.','b.ss1t':'거의 안 들리는 부분 자르기','b.ss1n':'보컬 클립에서 거의 들리지 않는 부분을 어레인지먼트에서 바로 잘라요.','b.ss2t':'컷 기준과 최소 간격','b.ss2n':'가장 큰 부분 기준으로 레벨을 정해요(기본 −38 dB). 250 ms보다 짧은 쉼은 남겨요.','b.ss3t':'프레이즈 앞뒤 여유','b.ss3n':'프레이즈 앞 40 ms와 뒤 150 ms 꼬리를 남겨요.','b.ss4t':'숨소리: 유지, 줄이기, 자르기','b.ss4n':'줄이기는 숨소리를 지우지 않고 12 dB 낮춰요.','b.ss5t':'여러 트랙, 실행 취소 한 번','b.ss5n':'여러 트랙에 한 번에 적용해요. Undo last로 모든 클립이 돌아와요.','b.ds1t':'드럼 루프의 모든 히트','b.ds1n':'히트를 하나씩 찾아 원본 오디오에서 잘라내요.','b.ds2t':'소리로 이름 붙이기','b.ds2n':'슬라이스마다 들리는 소리로 이름이 붙어요: Kick, Snare, Kick+Hat.','b.ds3t':'킷, 트랙, 오디오','b.ds3n':'Drum Rack+MIDI, 개별 트랙+MIDI, 개별 오디오 트랙 중에서 골라요.','b.ds4t':'같은 히트, 새 패턴','b.ds4n':'같은 히트로 새 패턴을 만들어요. Original로 원래 루프로 돌아가요.','b.ds5t':'컴퓨터 밖으로 안 나가요','b.ds5n':'Live 안에서 돌아가고 아무것도 올리지 않아요.','nav.board':'세션 뷰','nav.close':'가까이','nav.support':'지원','nav.buy':'Gumroad에서 구매',
-      'hero.studio':'플러그인 스튜디오. 첫 라인은 Max for Live.','hero.cap':'Set Monitor 믹서 뷰','hero.say':'Live 세트의 작은 불편을 고치는 디바이스 세 개.','hero.drag':'Live에 끌어다 놓으면 끝. 설치 프로그램 없음.','hero.go':'디바이스 보기 →',
-      'dev.h1':'플러그인 › M4L','dev.h2':'디바이스 세 개.','buy':'구매',
+      'nav.devices':'플러그인 › M4L','b.ew1t':'소리를 놓을 장소 14곳','b.ew1n':'클럽 밖, 화장실 칸, 폰 스피커, 물속, 확성기, 거대한 공간.','b.ew2t':'나무, 콘크리트, 금속','b.ew2n':'재질이 리버브 꼬리만이 아니라 소리의 몸통을 바꿔요.','b.ew3t':'노브 하나로 여기서 저기로','b.ew3n':'두 번째 장소를 고르고 Walk를 돌려요. 자동화하면 클럽 안으로 걸어 들어가는 트랜지션이 돼요.','b.ew4t':'Distance, Dirt, Room, Walk','b.ew4n':'자주 쓰는 움직임은 노브 4개로. 디스플레이가 공간을 그리고 소리에 맞춰 움직여요.','b.ew5t':'모든 프리셋은 출발점','b.ew5n':'Tone, Drive, Space, Motion, Material에 파라미터 39개, 전부 자동화돼요.','b.sm1t':'세트 레이턴시와 그 원인','b.sm1n':'세트 전체 지연을 ms와 샘플로, 가장 느린 경로와 원인 플러그인까지 보여줘요.','b.sm2t':'모든 트랙을 한 창에서','b.sm2n':'트랙, 그룹, 리턴의 인서트, 페이더, 팬, 뮤트, 솔로.','b.sm3t':'페이더와 실제 레벨을 나란히','b.sm3n':'트랙마다 페이더 dB와 실제로 나가는 레벨을 같이 보여줘요.','b.sm4t':'이름으로 플러그인 넣기','b.sm4n':'이름 일부를 치고 Return을 누르면 트랙에 들어가요.','b.sm5t':'믹스 비교와 라우드니스','b.sm5n':'바꾸기 전 믹스를 저장해 두고 비교해요. 메인 미터는 LUFS를 보여줘요.','b.ss1t':'거의 안 들리는 부분 자르기','b.ss1n':'보컬 클립에서 거의 들리지 않는 부분을 어레인지먼트에서 바로 잘라요.','b.ss2t':'컷 기준과 최소 간격','b.ss2n':'가장 큰 부분 기준으로 레벨을 정해요(기본 −38 dB). 250 ms보다 짧은 쉼은 남겨요.','b.ss3t':'프레이즈 앞뒤 여유','b.ss3n':'프레이즈 앞 40 ms와 뒤 150 ms 꼬리를 남겨요.','b.ss4t':'숨소리: 유지, 줄이기, 자르기','b.ss4n':'줄이기는 숨소리를 지우지 않고 12 dB 낮춰요.','b.ss5t':'여러 트랙, 실행 취소 한 번','b.ss5n':'여러 트랙에 한 번에 적용해요. Undo last로 모든 클립이 돌아와요.','b.ds1t':'드럼 루프의 모든 히트','b.ds1n':'히트를 하나씩 찾아 원본 오디오에서 잘라내요.','b.ds2t':'소리로 이름 붙이기','b.ds2n':'슬라이스마다 들리는 소리로 이름이 붙어요: Kick, Snare, Kick+Hat.','b.ds3t':'킷, 트랙, 오디오','b.ds3n':'Drum Rack+MIDI, 개별 트랙+MIDI, 개별 오디오 트랙 중에서 골라요.','b.ds4t':'같은 히트, 새 패턴','b.ds4n':'같은 히트로 새 패턴을 만들어요. Original로 원래 루프로 돌아가요.','b.ds5t':'컴퓨터 밖으로 안 나가요','b.ds5n':'Live 안에서 돌아가고 아무것도 올리지 않아요.','nav.board':'세션 뷰','nav.close':'가까이','nav.support':'지원','nav.buy':'Gumroad에서 구매',
+      'hero.studio':'플러그인 스튜디오. 첫 라인은 Max for Live.','hero.cap':'Set Monitor 믹서 뷰','hero.say':'Ableton Live용 디바이스 네 개.','hero.drag':'Live에 끌어다 놓으면 끝. 설치 프로그램 없음.','hero.go':'디바이스 보기 →',
+      'dev.h1':'플러그인 › M4L','dev.h2':'디바이스 네 개.','buy':'구매',
       'v.all':'전부','v.keep':'유지','v.click':'1클릭','v.orig':'원본','v.local':'로컬',
       'sm.1t':'세트 레이턴시와 그 원인','sm.1n':'세트 전체 지연, 가장 느린 경로, 가장 무거운 플러그인.','sm.2t':'모든 트랙을 한 창에서','sm.2n':'페이더, 팬, 뮤트, 솔로, 피크, 인서트. 그룹과 리턴 포함.','sm.3t':'이름으로 플러그인 추가','sm.3n':'이름 일부를 치고 Return을 누르면 트랙에 로드돼요.','sm.4t':'드래그 한 번은 실행 취소 한 번','sm.4n':'페이더를 움직인 한 번이 실행 취소 한 번으로 돌아와요.','sm.5t':'메인 라우드니스','sm.5n':'스냅샷과 비교로 믹스 전후를 확인해요.',
       'ss.1t':'컷 기준','ss.1n':'클립에서 가장 큰 부분을 기준으로 재요.','ss.2t':'최소 간격','ss.2n':'더 짧은 쉼은 남겨서 프레이징이 끊기지 않아요.','ss.3t':'앞과 뒤 여유','ss.3n':'소리 앞의 여유와 뒤에 남기는 꼬리.','ss.4t':'숨소리: 유지, 줄이기, 자르기','ss.4n':'줄이기는 지우지 않고 12dB 낮춰요.','ss.5t':'마지막 실행 취소','ss.5n':'한 번 누르면 모든 클립이 돌아와요.',
@@ -445,9 +460,9 @@ h1,h2,h3,p{margin:0}
       'faq.h':'자주 묻는 질문','f.say':'Live에서 곡을 끝내는 사람을 위한 작은 도구.','f.city':'서울','f.help':'문의: Gumroad 영수증에 회신해 주세요.','f.go':'디바이스 받기','lb.close':'닫기'
     },
     ja:{
-      'nav.devices':'プラグイン › M4L','b.sm1t':'セットのレイテンシーと原因','b.sm1n':'セット全体の遅延をmsとサンプルで、最も遅い経路と原因のプラグインまで表示します。','b.sm2t':'全トラックを1つのウィンドウで','b.sm2n':'トラック、グループ、リターンのインサート、フェーダー、パン、ミュート、ソロ。','b.sm3t':'フェーダーと実際のレベルを並べて','b.sm3n':'各トラックのフェーダーdBと実際に出ているレベルを並べて表示します。','b.sm4t':'名前でプラグインを読み込む','b.sm4n':'名前の一部を入力してReturnでトラックに入ります。','b.sm5t':'ミックスの比較とラウドネス','b.sm5n':'変更前のミックスを保存して比較できます。メインメーターはLUFS表示。','b.ss1t':'ほぼ聞こえない部分をカット','b.ss1n':'ボーカルクリップのほぼ聞こえない部分を、アレンジメント上でそのままカットします。','b.ss2t':'カット基準と最小ギャップ','b.ss2n':'最も大きい部分を基準にレベルを決めます(初期値 −38 dB)。250 ms未満の間は残します。','b.ss3t':'フレーズ前後の余白','b.ss3n':'各フレーズの前に40 ms、後ろに150 msのテールを残します。','b.ss4t':'ブレス:残す、下げる、切る','b.ss4n':'下げるはブレスを消さずに12 dB下げます。','b.ss5t':'複数トラック、アンドゥ1回','b.ss5n':'複数トラックに一度に適用。Undo lastで全クリップが戻ります。','b.ds1t':'ドラムループのすべてのヒット','b.ds1n':'ヒットを一つずつ見つけ、元のオーディオから切り出します。','b.ds2t':'鳴っている音で命名','b.ds2n':'スライスごとに聞こえる音で名前が付きます:Kick、Snare、Kick+Hat。','b.ds3t':'キット、トラック、オーディオ','b.ds3n':'Drum Rack+MIDI、個別トラック+MIDI、個別オーディオトラックから選べます。','b.ds4t':'同じヒット、新しいパターン','b.ds4n':'同じヒットで新しいパターンを作ります。Originalで元のループに戻ります。','b.ds5t':'外部に送信しません','b.ds5n':'Liveの中で動作し、何もアップロードしません。','nav.board':'セッション','nav.close':'クローズアップ','nav.support':'サポート','nav.buy':'Gumroadで購入',
-      'hero.studio':'プラグインのスタジオ。最初のラインはMax for Live。','hero.cap':'Set Monitor ミキサービュー','hero.say':'Liveセットの小さな不便を直す3つのデバイス。','hero.drag':'Liveにドラッグするだけ。インストーラーなし。','hero.go':'デバイスを見る →',
-      'dev.h1':'プラグイン › M4L','dev.h2':'3つのデバイス。','buy':'購入',
+      'nav.devices':'プラグイン › M4L','b.ew1t':'音を置く14の場所','b.ew1n':'クラブの外、トイレの個室、スマホのスピーカー、水中、メガホン、巨大な空間。','b.ew2t':'木、コンクリート、金属','b.ew2n':'素材がリバーブの残響だけでなく、音のボディを変えます。','b.ew3t':'ノブ1つで、ここからあそこへ','b.ew3n':'2つ目の場所を選んでWalkを回すだけ。オートメーションでクラブに入っていくトランジションに。','b.ew4t':'Distance、Dirt、Room、Walk','b.ew4n':'よく使う動きは4つのノブで。ディスプレイが空間を描き、音に合わせて動きます。','b.ew5t':'すべてのプリセットは出発点','b.ew5n':'Tone、Drive、Space、Motion、Materialに39のパラメーター、すべてオートメーション可能。','b.sm1t':'セットのレイテンシーと原因','b.sm1n':'セット全体の遅延をmsとサンプルで、最も遅い経路と原因のプラグインまで表示します。','b.sm2t':'全トラックを1つのウィンドウで','b.sm2n':'トラック、グループ、リターンのインサート、フェーダー、パン、ミュート、ソロ。','b.sm3t':'フェーダーと実際のレベルを並べて','b.sm3n':'各トラックのフェーダーdBと実際に出ているレベルを並べて表示します。','b.sm4t':'名前でプラグインを読み込む','b.sm4n':'名前の一部を入力してReturnでトラックに入ります。','b.sm5t':'ミックスの比較とラウドネス','b.sm5n':'変更前のミックスを保存して比較できます。メインメーターはLUFS表示。','b.ss1t':'ほぼ聞こえない部分をカット','b.ss1n':'ボーカルクリップのほぼ聞こえない部分を、アレンジメント上でそのままカットします。','b.ss2t':'カット基準と最小ギャップ','b.ss2n':'最も大きい部分を基準にレベルを決めます(初期値 −38 dB)。250 ms未満の間は残します。','b.ss3t':'フレーズ前後の余白','b.ss3n':'各フレーズの前に40 ms、後ろに150 msのテールを残します。','b.ss4t':'ブレス:残す、下げる、切る','b.ss4n':'下げるはブレスを消さずに12 dB下げます。','b.ss5t':'複数トラック、アンドゥ1回','b.ss5n':'複数トラックに一度に適用。Undo lastで全クリップが戻ります。','b.ds1t':'ドラムループのすべてのヒット','b.ds1n':'ヒットを一つずつ見つけ、元のオーディオから切り出します。','b.ds2t':'鳴っている音で命名','b.ds2n':'スライスごとに聞こえる音で名前が付きます:Kick、Snare、Kick+Hat。','b.ds3t':'キット、トラック、オーディオ','b.ds3n':'Drum Rack+MIDI、個別トラック+MIDI、個別オーディオトラックから選べます。','b.ds4t':'同じヒット、新しいパターン','b.ds4n':'同じヒットで新しいパターンを作ります。Originalで元のループに戻ります。','b.ds5t':'外部に送信しません','b.ds5n':'Liveの中で動作し、何もアップロードしません。','nav.board':'セッション','nav.close':'クローズアップ','nav.support':'サポート','nav.buy':'Gumroadで購入',
+      'hero.studio':'プラグインのスタジオ。最初のラインはMax for Live。','hero.cap':'Set Monitor ミキサービュー','hero.say':'Ableton Live用の4つのデバイス。','hero.drag':'Liveにドラッグするだけ。インストーラーなし。','hero.go':'デバイスを見る →',
+      'dev.h1':'プラグイン › M4L','dev.h2':'4つのデバイス。','buy':'購入',
       'v.all':'全部','v.keep':'残す','v.click':'1クリック','v.orig':'原音','v.local':'ローカル',
       'sm.1t':'セットのレイテンシーと原因','sm.1n':'セット全体の遅延、最も遅い経路、最も重いプラグイン。','sm.2t':'全トラックを1つのウィンドウで','sm.2n':'フェーダー、パン、ミュート、ソロ、ピーク、インサート。グループとリターンも。','sm.3t':'名前でプラグインを追加','sm.3n':'名前の一部を入力してReturnでトラックに読み込みます。','sm.4t':'1回のドラッグは1回のアンドゥ','sm.4n':'フェーダー操作1回が1回のアンドゥで戻ります。','sm.5t':'メインのラウドネス','sm.5n':'スナップショットと差分でミックスの前後を比べられます。',
       'ss.1t':'カットの基準','ss.1n':'クリップの最も大きい部分を基準に測ります。','ss.2t':'最小ギャップ','ss.2n':'短い間は残すので、フレーズが途切れません。','ss.3t':'前後の余白','ss.3n':'音の前の余白と、後に残すテール。','ss.4t':'ブレス:残す、下げる、切る','ss.4n':'下げるは消さずに12dB下げます。','ss.5t':'直前を元に戻す','ss.5n':'1クリックで全クリップが戻ります。',
