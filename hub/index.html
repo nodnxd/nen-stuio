@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>HUB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0e0e0e; --paper:#ecebe7; --amber:#f4a62a; --amber-deep:#e08f0c;
+    --mute:#8d8b85; --line:#2a2a28; --row:#171716;
+    --sans:"Archivo","Helvetica Neue","Apple SD Gothic Neo","Hiragino Sans","Noto Sans CJK KR",Arial,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ink);color:var(--paper);font:500 13px/1.45 var(--sans);
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
+  body{padding:10px 12px 12px;min-height:100vh;display:flex;flex-direction:column;gap:8px}
+
+  header{display:flex;align-items:center;gap:10px}
+  .logo{flex:none;width:40px;height:40px;background:var(--paper);color:var(--ink);display:grid;place-items:center;
+    font:900 15px/1 var(--sans);letter-spacing:-.02em}
+  .lead{flex:1;color:var(--mute);font-size:12px;line-height:1.3}
+  .lang{display:flex;gap:2px}
+  .lang button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:800 11px/1 var(--sans);
+    padding:6px 5px;cursor:pointer}
+  .lang button[aria-pressed="true"]{color:var(--paper);border-bottom-color:var(--amber)}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+  .hero{display:block;background:var(--amber);color:var(--ink);padding:12px 16px 12px;text-decoration:none;cursor:pointer;
+    position:relative;transition:background .15s}
+  .hero:hover{background:var(--amber-deep)}
+  .hero .new{font:800 11px/1 var(--sans);background:var(--ink);color:var(--amber);display:inline-block;padding:4px 7px}
+  .hero .name{display:block;font:900 clamp(34px,12vw,46px)/.92 var(--sans);letter-spacing:-.045em;margin:20px 0 8px}
+  .hero .desc{font-size:13px;line-height:1.35;max-width:26ch;font-weight:500}
+  .hero .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font:800 13px/1 var(--sans)}
+
+  .list{border-top:1px solid var(--line)}
+  .item{display:block;padding:8px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;cursor:pointer;
+    transition:background .12s,padding .12s}
+  .item:hover{background:var(--row);padding-left:10px}
+  .item .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .item .name{font:800 19px/1.1 var(--sans);letter-spacing:-.02em}
+  .item .price{font:800 13px/1 var(--sans);color:var(--amber)}
+  .item .desc{color:var(--mute);font-size:12px;margin-top:3px;max-width:36ch;line-height:1.35}
+
+  .all{display:flex;justify-content:space-between;align-items:center;border:2px solid var(--paper);color:var(--paper);
+    padding:11px 14px;text-decoration:none;font:800 14px/1 var(--sans);cursor:pointer;transition:background .12s,color .12s}
+  .all:hover{background:var(--paper);color:var(--ink)}
+  .all svg{width:16px;height:16px}
+
+  footer{margin-top:auto;padding-top:0;display:flex;justify-content:space-between;gap:8px;color:var(--mute);font-size:11px}
+  footer b{font-weight:900;color:var(--paper);letter-spacing:-.01em;white-space:nowrap}
+  [hidden]{display:none!important}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" aria-hidden="true">NEN</div>
+  <p class="lead" data-t="lead"></p>
+  <div class="lang" role="group" aria-label="Language">
+    <button data-lang="en" aria-pressed="false">EN</button>
+    <button data-lang="ko" aria-pressed="false">KO</button>
+    <button data-lang="ja" aria-pressed="false">JA</button>
+  </div>
+</header>
+
+<a class="hero" id="hero" role="link"></a>
+<div class="list" id="products"></div>
+<a class="all" id="all" role="link"></a>
+
+<footer>
+  <b>NEN STUDIO</b>
+  <span data-t="foot"></span>
+</footer>
+
+<script>
+/* ===================================================================
+   편집은 여기만:  PRODUCTS 배열 (hero:true 항목이 위 큰 주황 칸)
+   가격/주소는 NEN STUDIO 사이트(nen-stuio.vercel.app)와 맞추기
+   =================================================================== */
+const SRC = "utm_source=hub&utm_medium=device";
+const SITE = "https://nen-stuio.vercel.app/plug-ins/m4l";
+
+const PRODUCTS = [
+  { id:"elsewhere", name:"Elsewhere", price:"$29", ver:"v0.7", hero:true,
+    url:SITE+"/elsewhere",
+    desc:{ en:"Our newest Max for Live device.",
+           ko:"가장 최근에 나온 Max for Live 디바이스.",
+           ja:"最新のMax for Liveデバイス。" } },
+  { id:"setmonitor", name:"Set Monitor", price:"$29",
+    url:SITE+"/set-monitor",
+    desc:{ en:"See your whole set's latency and every track's real level, groups included.",
+           ko:"세트 전체 레이턴시와 트랙별 실제 레벨을 한눈에. 그룹 트랙도 보여요.",
+           ja:"セット全体のレイテンシーと各トラックの実レベルを一目で。グループも表示。" } },
+  { id:"stripsilence", name:"Strip Silence", price:"$19",
+    url:SITE+"/strip-silence",
+    desc:{ en:"Cut the near-inaudible parts of a vocal. Breaths stay natural.",
+           ko:"보컬에서 거의 안 들리는 구간만 잘라내요. 숨소리는 자연스럽게 살려요.",
+           ja:"ボーカルのほぼ聞こえない部分をカット。ブレスは自然に残します。" } },
+  { id:"drumslicer", name:"Drum Slicer", price:"$29",
+    url:SITE+"/drum-slicer",
+    desc:{ en:"Slice a drum loop into hits, sorted into kick, snare and hat, straight into a kit.",
+           ko:"드럼 루프를 히트 단위로 잘라 킥·스네어·햇으로 분류해 바로 킷으로.",
+           ja:"ドラムループをヒット単位で切り出し、キック・スネア・ハットに分類してキットへ。" } }
+];
+
+const T = {
+  en:{ lead:"HUB is free. These are our other devices for Ableton Live.", all:"See all plug-ins", newtag:"New", foot:"Drag in. No installer." },
+  ko:{ lead:"HUB는 무료예요. Ableton Live용 다른 디바이스도 만나보세요.", all:"플러그인 전체 보기", newtag:"신규", foot:"끌어다 놓기만 하면 끝. 설치 프로그램 없음." },
+  ja:{ lead:"HUBは無料です。Ableton Live用のほかのデバイスもどうぞ。", all:"すべてのプラグインを見る", newtag:"新着", foot:"ドラッグするだけ。インストーラー不要。" }
+};
+
+/* 외부 링크: Max jweb → 엔진 → 기본 브라우저. 일반 브라우저에선 새 탭 */
+function openExternal(url){
+  try{
+    if (window.max && typeof window.max.outlet === "function") { window.max.outlet("openurl", url); return; }
+  }catch(e){}
+  window.open(url, "_blank", "noopener");
+}
+function withSrc(u){ return u + (u.indexOf("?")>-1 ? "&" : "?") + SRC; }
+function wire(a, url){
+  a.href = withSrc(url);
+  a.addEventListener("click", ev=>{ ev.preventDefault(); openExternal(a.href); });
+}
+
+let LANG = "en";
+try{
+  const saved = localStorage.getItem("hub_lang");
+  const nav = (navigator.language||"en").slice(0,2);
+  LANG = saved || (T[nav] ? nav : "en");
+}catch(e){}
+if(!T[LANG]) LANG = "en";
+
+function render(){
+  const L = T[LANG];
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = L[el.dataset.t]);
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang===LANG)));
+
+  const hero = document.getElementById("hero"), list = document.getElementById("products");
+  hero.textContent = ""; list.textContent = "";
+  PRODUCTS.forEach(p=>{
+    const d = p.desc[LANG] || p.desc.en;
+    if (p.hero){
+      hero.innerHTML = '<span class="new"></span><span class="name"></span><p class="desc"></p><div class="meta"><span class="ver"></span><span class="price"></span></div>';
+      hero.querySelector(".new").textContent = L.newtag;
+      hero.querySelector(".name").textContent = p.name;
+      hero.querySelector(".desc").textContent = d;
+      hero.querySelector(".ver").textContent = p.ver || "";
+      hero.querySelector(".price").textContent = p.price;
+      wire(hero, p.url);
+    } else {
+      const a = document.createElement("a"); a.className = "item"; a.setAttribute("role","link");
+      a.innerHTML = '<div class="row"><span class="name"></span><span class="price"></span></div><p class="desc"></p>';
+      a.querySelector(".name").textContent = p.name;
+      a.querySelector(".price").textContent = p.price;
+      a.querySelector(".desc").textContent = d;
+      wire(a, p.url);
+      list.appendChild(a);
+    }
+  });
+  const all = document.getElementById("all");
+  all.innerHTML = '<span></span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 8h11M9 3l5 5-5 5"/></svg>';
+  all.firstChild.textContent = L.all;
+  wire(all, SITE);
+}
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>{
+  LANG=b.dataset.lang; try{localStorage.setItem("hub_lang",LANG)}catch(e){} render();
+}));
+render();
+</script>
+</body>
+</html>
