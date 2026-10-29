@@ -125,7 +125,7 @@ h1,h2,h3,p{margin:0}
 .bands .n{display:block;font-size:var(--t5);color:var(--soft);font-weight:400;margin-top:2px;max-width:60ch}
 .win{margin:20px 0 0;max-width:880px;background:#1d1d1d;padding:10px}
 .win img{display:block;width:100%;height:auto}
-.hubv{margin-top:8px}.hubv video{display:block;width:100%;height:auto;background:#000}
+.hubv,.devv{margin-top:8px}.hubv video,.devv video{display:block;width:100%;height:auto;background:#000}.devv.portrait video{max-width:380px;margin:0 auto}.gal2{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:880px;margin-top:8px}.gal2 .win{margin:0}
 .hubx{margin:14px 0 0;max-width:72ch;font-size:var(--t5);color:var(--soft)}.hubx a{color:var(--accent);white-space:nowrap}
 .win figcaption{font-size:var(--t5);color:var(--soft);padding-top:8px}
 .cards{list-style:none;margin:20px 0 0;padding:0;display:grid;max-width:880px;grid-template-columns:repeat(5,minmax(0,1fr));gap:var(--gap)}
@@ -338,6 +338,7 @@ h1,h2,h3,p{margin:0}
           <li><span class="v">SNAPSHOT</span><span class="t"><span data-i18n="b.sm5t">Compare a mix, check loudness</span><span class="n" data-i18n="b.sm5n">Save the mix before a change and compare after. The main meter reads LUFS.</span></span></li>
         </ul>
         <figure class="win"><img src="/img/ui/set-monitor-list.png" alt="Set Monitor track list: fader, pan, peak and latency per track, set latency 164.90 ms" width="910" height="240" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <figure class="win devv portrait"><video class="dv" data-v="set-monitor" data-p="1" controls preload="none" playsinline width="1080" height="1920"></video><figcaption data-i18n="v.cap">A short walkthrough.</figcaption></figure>
         <ul class="cards" aria-label="Set Monitor cards">
           <li><button class="card" type="button"><img src="/img/feat/sm-1.jpg" alt="Set Monitor. Mixer, inserts, latency, LUFS. Version 4.11, $29." width="1080" height="1350" loading="lazy"></button></li>
           <li><button class="card" type="button"><img src="/img/feat/sm-2.jpg" alt="Every track. One window." width="1080" height="1350" loading="lazy"></button></li>
@@ -356,6 +357,7 @@ h1,h2,h3,p{margin:0}
           <li><span class="v">TRACKS</span><span class="t"><span data-i18n="b.ss5t">Several tracks, one undo</span><span class="n" data-i18n="b.ss5n">Run it on many tracks at once. Undo last puts every clip back.</span></span></li>
         </ul>
         <figure class="win"><img src="/img/ui/strip-silence.png" alt="Strip Silence device in Live" width="906" height="334" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <figure class="win devv"><video class="dv" data-v="strip-silence" data-p="0" controls preload="none" playsinline width="1920" height="1080"></video><figcaption data-i18n="v.cap">A short walkthrough.</figcaption></figure>
         <ul class="cards" aria-label="Strip Silence cards">
           <li><button class="card" type="button"><img src="/img/feat/ss-1.jpg" alt="Strip Silence. Gaps, breaths, every track, undo. Version 1.1, $19." width="1080" height="1350" loading="lazy"></button></li>
           <li><button class="card" type="button"><img src="/img/feat/ss-2.jpg" alt="One click. All back." width="1080" height="1350" loading="lazy"></button></li>
@@ -375,6 +377,7 @@ h1,h2,h3,p{margin:0}
           <li><span class="v">LOCAL</span><span class="t"><span data-i18n="b.ds5t">Nothing leaves your computer</span><span class="n" data-i18n="b.ds5n">It runs inside Live and uploads nothing.</span></span></li>
         </ul>
         <figure class="win"><img src="/img/ui/drum-slicer.png" alt="Drum Slicer device in Live" width="892" height="244" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <figure class="win devv"><video class="dv" data-v="drum-slicer" data-p="0" controls preload="none" playsinline width="1920" height="1080"></video><figcaption data-i18n="v.cap">A short walkthrough.</figcaption></figure>
         <ul class="cards" aria-label="Drum Slicer cards">
           <li><button class="card" type="button"><img src="/img/feat/ds-1.jpg" alt="Drum Slicer. Audio, kit, tracks, flip. Version 1.2.0, $29." width="1080" height="1350" loading="lazy"></button></li>
           <li><button class="card" type="button"><img src="/img/feat/ds-2.jpg" alt="Every hit. One click." width="1080" height="1350" loading="lazy"></button></li>
@@ -393,6 +396,9 @@ h1,h2,h3,p{margin:0}
           <li><span class="v">EDIT</span><span class="t"><span data-i18n="b.ew5t">Every preset is a starting point</span><span class="n" data-i18n="b.ew5n">39 parameters across Tone, Drive, Space, Motion and Material, all automatable.</span></span></li>
         </ul>
         <figure class="win"><img src="/img/ui/elsewhere.png" alt="Elsewhere device in Live: Outside Club, Concrete" width="1254" height="385" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <div class="gal2"><figure class="win"><img src="/img/ui/elsewhere-walk.jpg" alt="Elsewhere: Walk between two places" width="720" height="900" loading="lazy"></figure><figure class="win"><img src="/img/ui/elsewhere-places.jpg" alt="Elsewhere: 14 places" width="720" height="900" loading="lazy"></figure></div>
+        <figure class="win"><img src="/img/ui/elsewhere-cover.jpg" alt="Elsewhere" width="1280" height="720" loading="lazy"></figure>
+        <figure class="win devv portrait"><video class="dv" data-v="elsewhere" data-p="1" controls preload="none" playsinline width="1080" height="1920"></video><figcaption data-i18n="v.cap">A short walkthrough.</figcaption></figure>
       </div>
 
       <div class="panel" role="tabpanel" id="p-elsewhen" aria-labelledby="t-elsewhen" hidden>
@@ -403,6 +409,9 @@ h1,h2,h3,p{margin:0}
           <li><span class="v">STEPS</span><span class="t"><span data-i18n="b.ex4t">A step sequencer like Glitch</span><span class="n" data-i18n="b.ex4n">One lane per pad, Beats by Divisions, triplets included. Sample-accurate.</span></span></li>
           <li><span class="v">PLAY</span><span class="t"><span data-i18n="b.ex5t">Made for performance</span><span class="n" data-i18n="b.ex5n">Each pad has an on/off parameter to automate, MIDI-map or key-map. Hold or Latch.</span></span></li>
         </ul>
+        <figure class="win"><img src="/img/ui/elsewhen-edit.png" alt="Elsewhen device in Live: three pads chained, Half/Double curve and before/after waveform" width="1264" height="232" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
+        <figure class="win"><img src="/img/ui/elsewhen-seq.png" alt="Elsewhen step sequencer with a Stutter block and Gater steps" width="1264" height="232" loading="lazy"></figure>
+        <figure class="win devv"><video class="dv" data-v="elsewhen" data-p="0" controls preload="none" playsinline width="1920" height="1080"></video><figcaption data-i18n="v.cap">A short walkthrough.</figcaption></figure>
       </div>
 
       <div class="panel" role="tabpanel" id="p-hub" aria-labelledby="t-hub" hidden>
@@ -415,7 +424,7 @@ h1,h2,h3,p{margin:0}
           <li><span class="v">START</span><span class="t"><span data-i18n="b.hb6t">Opens when Live starts</span><span class="n" data-i18n="b.hb6n">Save HUB in your Default Set and the window opens with Live and with every new set.</span></span></li>
         </ul>
         <figure class="win"><img src="/img/ui/hub.png" alt="HUB window: recent sets and templates with a filter box, and the NEN STUDIO panel on the right" width="1100" height="560" loading="lazy"><figcaption data-i18n="win.cap">The device as it appears in Live.</figcaption></figure>
-        <figure class="win hubv"><video id="hubvid" controls preload="none" playsinline poster="/img/ui/hub-video.jpg" width="1920" height="1080"></video><figcaption data-i18n="hb.vcap">HUB in 25 seconds.</figcaption></figure>
+        <figure class="win hubv"><video id="hubvid" class="dv" data-v="hub" data-p="0" controls preload="none" playsinline poster="/img/ui/hub-video.jpg" width="1920" height="1080"></video><figcaption data-i18n="hb.vcap">HUB in 25 seconds.</figcaption></figure>
         <p class="hubx"><span data-i18n="hb.req">Needs Ableton Live 12 with Max for Live. macOS only for now. HUB reads Live's own files on your computer and uploads nothing.</span> <a href="/downloads/HUB_Manual.pdf" download data-i18n="hb.man">Manual (English, Korean, Japanese)</a></p>
       </div>
 
@@ -486,7 +495,7 @@ h1,h2,h3,p{margin:0}
       'sm.1t':'세트 레이턴시와 그 원인','sm.1n':'세트 전체 지연, 가장 느린 경로, 가장 무거운 플러그인.','sm.2t':'모든 트랙을 한 창에서','sm.2n':'페이더, 팬, 뮤트, 솔로, 피크, 인서트. 그룹과 리턴 포함.','sm.3t':'이름으로 플러그인 추가','sm.3n':'이름 일부를 치고 Return을 누르면 트랙에 로드돼요.','sm.4t':'드래그 한 번은 실행 취소 한 번','sm.4n':'페이더를 움직인 한 번이 실행 취소 한 번으로 돌아와요.','sm.5t':'메인 라우드니스','sm.5n':'스냅샷과 비교로 믹스 전후를 확인해요.',
       'ss.1t':'컷 기준','ss.1n':'클립에서 가장 큰 부분을 기준으로 재요.','ss.2t':'최소 간격','ss.2n':'더 짧은 쉼은 남겨서 프레이징이 끊기지 않아요.','ss.3t':'앞과 뒤 여유','ss.3n':'소리 앞의 여유와 뒤에 남기는 꼬리.','ss.4t':'숨소리: 유지, 줄이기, 자르기','ss.4n':'줄이기는 지우지 않고 12dB 낮춰요.','ss.5t':'마지막 실행 취소','ss.5n':'한 번 누르면 모든 클립이 돌아와요.',
       'ds.1t':'모든 히트 추출','ds.1n':'드럼 루프 클립을 고르고 Extract를 누르세요.','ds.2t':'울리는 소리로 묶기','ds.2n':'슬라이스마다 들리는 소리로 이름이 붙어요: Kick, Snare, Kick+Hat.','ds.3t':'킷, 트랙, 오디오','ds.3n':'루프를 Drum Rack, 개별 트랙, 오디오로 다시 만들어요.','ds.4t':'모든 트랙을 더하면 원래 루프','ds.4n':'원본 오디오에서 잘라요. 가공도 분리도 없고, 피크를 지키며 다듬어요.','ds.5t':'업로드 없음','ds.5n':'Live 안에서 돌아가요. Flip은 같은 히트로 새 패턴을 만들어요.',
-      'win.cap':'Live에서 보이는 실제 디바이스.',
+      'win.cap':'Live에서 보이는 실제 디바이스.','v.cap':'짧은 소개 영상.',
       'b.hb1t':'최근 세트','b.hb1n':'Live가 기억하는 최근 세트 25개를 최신순으로, 마지막 수정 시점과 함께.','b.hb2t':'템플릿을 한 목록에','b.hb2n':'Templates 폴더 전체를 보여주고, 기본 템플릿이 맨 위에 와요.','b.hb3t':'입력해서 찾기','b.hb3n':'검색창 하나로 두 목록이 함께 걸러져요. 단어를 여러 개 쓰면 모두 들어간 항목만 남아요.','b.hb4t':'복사본으로 시작','b.hb4n':'템플릿을 고르고 New를 누르면 HUB가 복사본을 만들어 열어요. 템플릿 원본은 그대로예요.','b.hb5t':'Finder에서 보기','b.hb5n':'세트가 있는 폴더로 바로 이동해요. 연결이 끊긴 디스크의 세트는 흐리게 표시되고 offline이라고 나와요.','b.hb6t':'Live를 켜면 열려요','b.hb6n':'HUB를 Default Set에 저장해 두면 Live를 켤 때와 새 세트를 만들 때마다 창이 열려요.','hb.vcap':'25초로 보는 HUB.','hb.req':'Max for Live가 있는 Ableton Live 12가 필요해요. 지금은 macOS만 지원해요. HUB는 내 컴퓨터의 Live 파일을 읽을 뿐 아무것도 올리지 않아요.','hb.man':'설명서 (영어, 한국어, 일본어)',
       
       'board.say':'Set Monitor로 본 실제 세션: 트랙 32개, 세트 레이턴시 <b>164.90 ms</b>. 트랙을 열면 무엇이 걸려 있는지 보여요.','board.note':'위 카드에 나온 세션의 트랙 이름과 수치. 열: 페이더, 팬, 피크, 레이턴시.',
@@ -501,7 +510,7 @@ h1,h2,h3,p{margin:0}
       'sm.1t':'セットのレイテンシーと原因','sm.1n':'セット全体の遅延、最も遅い経路、最も重いプラグイン。','sm.2t':'全トラックを1つのウィンドウで','sm.2n':'フェーダー、パン、ミュート、ソロ、ピーク、インサート。グループとリターンも。','sm.3t':'名前でプラグインを追加','sm.3n':'名前の一部を入力してReturnでトラックに読み込みます。','sm.4t':'1回のドラッグは1回のアンドゥ','sm.4n':'フェーダー操作1回が1回のアンドゥで戻ります。','sm.5t':'メインのラウドネス','sm.5n':'スナップショットと差分でミックスの前後を比べられます。',
       'ss.1t':'カットの基準','ss.1n':'クリップの最も大きい部分を基準に測ります。','ss.2t':'最小ギャップ','ss.2n':'短い間は残すので、フレーズが途切れません。','ss.3t':'前後の余白','ss.3n':'音の前の余白と、後に残すテール。','ss.4t':'ブレス:残す、下げる、切る','ss.4n':'下げるは消さずに12dB下げます。','ss.5t':'直前を元に戻す','ss.5n':'1クリックで全クリップが戻ります。',
       'ds.1t':'すべてのヒットを抽出','ds.1n':'ドラムループのクリップを選んでExtractを押します。','ds.2t':'鳴っている音でグループ化','ds.2n':'スライスごとに聞こえる音で名前が付きます:Kick、Snare、Kick+Hat。','ds.3t':'キット、トラック、オーディオ','ds.3n':'ループをDrum Rack、個別トラック、オーディオとして組み直します。','ds.4t':'全トラックを足すと元のループ','ds.4n':'元のオーディオから切り出します。加工も分離もせず、ピークを守ってトリム。','ds.5t':'アップロードなし','ds.5n':'Liveの中で動きます。Flipは同じヒットで新しいパターンを作ります。',
-      'win.cap':'Liveでの実際のデバイス。',
+      'win.cap':'Liveでの実際のデバイス。','v.cap':'短い紹介動画。',
       'b.hb1t':'最近のセット','b.hb1n':'Liveが覚えている最近のセット25件を新しい順に、最終更新とともに表示します。','b.hb2t':'テンプレートを1つの一覧に','b.hb2n':'Templatesフォルダ全体を表示し、デフォルトのテンプレートが先頭に来ます。','b.hb3t':'入力して探す','b.hb3n':'検索ボックス1つで両方の一覧を絞り込みます。複数の単語はすべて含むものだけが残ります。','b.hb4t':'コピーから開始','b.hb4n':'テンプレートを選んでNewを押すと、HUBがコピーを作って開きます。テンプレート本体は変わりません。','b.hb5t':'Finderで表示','b.hb5n':'セットのフォルダへすぐ移動します。接続されていないディスクのセットは薄く表示され、offlineと出ます。','b.hb6t':'Live起動時に開く','b.hb6n':'HUBをDefault Setに保存しておくと、Liveの起動時と新しいセットを作るたびにウィンドウが開きます。','hb.vcap':'25秒でわかるHUB。','hb.req':'Max for Live付きのAbleton Live 12が必要です。現在はmacOSのみ対応です。HUBはお使いのコンピューター上のLiveのファイルを読むだけで、何もアップロードしません。','hb.man':'マニュアル（英語・韓国語・日本語）',
       
       'board.say':'Set Monitorで見た実際のセッション:32トラック、セットレイテンシー<b>164.90 ms</b>。トラックを開くと中身が見えます。','board.note':'上のカードと同じセッションのトラック名と数値。列:フェーダー、パン、ピーク、レイテンシー。',
@@ -577,7 +586,7 @@ h1,h2,h3,p{margin:0}
     if(fr){by.removeAttribute('target');by.setAttribute('download','')}else{by.setAttribute('target','_blank');by.removeAttribute('download')}
     document.getElementById('buy-l').textContent=buyLabel();
     document.getElementById('buy-p').textContent=fr?(lang==='en'?'Free':lang==='ko'?'무료':'無料'):DEV[id].price;
-    var hv=document.getElementById('hubvid');if(hv){var vs='/video/hub-'+lang+'.mp4';if(hv.getAttribute('data-s')!==vs){hv.setAttribute('data-s',vs);var was=!hv.paused;hv.src=vs;if(was)hv.play&&hv.play()}}
+    document.querySelectorAll('video.dv').forEach(function(v){var n=v.getAttribute('data-v'),vs='/video/'+n+(v.getAttribute('data-p')==='1'?'':'-'+lang)+'.mp4';if(v.getAttribute('data-s')!==vs){v.setAttribute('data-s',vs);var was=!v.paused;v.src=vs;if(was&&v.play)v.play()}});
   }
   tabs.forEach(function(t,i){
     t.addEventListener('click',function(){selectDev(t.getAttribute('data-dev'));try{history.replaceState(null,'','/plug-ins/m4l/'+t.getAttribute('data-dev'))}catch(e){}});
