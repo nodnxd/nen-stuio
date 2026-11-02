@@ -86,32 +86,24 @@
 const SRC = "utm_source=hub&utm_medium=device";
 const SITE = "https://nen-stuio.vercel.app/plug-ins/m4l";
 
+const GR = "https://nodnxd.gumroad.com/l";
 const PRODUCTS = [
-  { id:"elsewhere", name:"Elsewhere", price:"$29", ver:"v0.7", hero:true,
-    url:SITE+"/elsewhere",
-    desc:{ en:"Put any sound somewhere else. 14 places, 3 materials, one Walk knob.",
-           ko:"어떤 소리든 다른 곳으로. 장소 14개, 재질 3종, Walk 노브 하나로 이동.",
-           ja:"どんな音も別の場所へ。14の場所と3つの素材、Walkノブ1つで移動。" } },
-  { id:"setmonitor", name:"Set Monitor", price:"$29",
-    url:SITE+"/set-monitor",
-    desc:{ en:"See your whole set's latency and every track's real level, groups included.",
-           ko:"세트 전체 레이턴시와 트랙별 실제 레벨을 한눈에. 그룹 트랙도 보여요.",
-           ja:"セット全体のレイテンシーと各トラックの実レベルを一目で。グループも表示。" } },
-  { id:"elsewhen", name:"Elsewhen", price:"$19",
-    url:SITE+"/elsewhen",
-    desc:{ en:"Move sound to another time. 8 pads, chains, and a step sequencer.",
-           ko:"소리를 다른 때로. 패드 8개, 체인, 스텝 시퀀서.",
-           ja:"音を別の時間へ。8つのパッド、チェーン、ステップシーケンサー。" } },
-  { id:"stripsilence", name:"Strip Silence", price:"$19",
-    url:SITE+"/strip-silence",
-    desc:{ en:"Cut the near-inaudible parts of a vocal. Breaths stay natural.",
-           ko:"보컬에서 거의 안 들리는 구간만 잘라내요. 숨소리는 자연스럽게 살려요.",
-           ja:"ボーカルのほぼ聞こえない部分をカット。ブレスは自然に残します。" } },
-  { id:"drumslicer", name:"Drum Slicer", price:"$29",
-    url:SITE+"/drum-slicer",
-    desc:{ en:"Slice a drum loop into hits, sorted into kick, snare and hat, straight into a kit.",
-           ko:"드럼 루프를 히트 단위로 잘라 킥·스네어·햇으로 분류해 바로 킷으로.",
-           ja:"ドラムループをヒット単位で切り出し、キック・スネア・ハットに分類してキットへ。" } }
+  { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46", hero:true,
+    tag:{ en:"New bundle", ko:"새 번들", ja:"新バンドル" },
+    url:GR+"/complete",
+    desc:{ en:"Every NEN device in one: Set Monitor, Strip Silence, Drum Slicer, Elsewhere, Elsewhen.",
+           ko:"NEN 디바이스 전부를 한 번에. Set Monitor, Strip Silence, Drum Slicer, Elsewhere, Elsewhen.",
+           ja:"NENの全デバイスをひとつに。Set Monitor、Strip Silence、Drum Slicer、Elsewhere、Elsewhen。" } },
+  { id:"spacetime", name:"Space & Time", price:"$39",
+    url:GR+"/spacetime",
+    desc:{ en:"Elsewhere + Elsewhen. Move a sound to another place, then another time. Save $9.",
+           ko:"Elsewhere + Elsewhen. 소리를 다른 곳으로, 다른 때로. $9 할인.",
+           ja:"Elsewhere + Elsewhen。音を別の場所へ、別の時間へ。$9お得。" } },
+  { id:"cutslice", name:"Cut & Slice", price:"$39",
+    url:GR+"/cutslice",
+    desc:{ en:"Strip Silence + Drum Slicer. Clean vocals, chop drums. Save $9.",
+           ko:"Strip Silence + Drum Slicer. 보컬 정리와 드럼 슬라이스. $9 할인.",
+           ja:"Strip Silence + Drum Slicer。ボーカル整理とドラムのスライス。$9お得。" } }
 ];
 
 const T = {
@@ -153,7 +145,7 @@ function render(){
     const d = p.desc[LANG] || p.desc.en;
     if (p.hero){
       hero.innerHTML = '<span class="new"></span><span class="name"></span><p class="desc"></p><div class="meta"><span class="ver"></span><span class="price"></span></div>';
-      hero.querySelector(".new").textContent = L.newtag;
+      hero.querySelector(".new").textContent = (p.tag && (p.tag[LANG]||p.tag.en)) || L.newtag;
       hero.querySelector(".name").textContent = p.name;
       hero.querySelector(".desc").textContent = d;
       hero.querySelector(".ver").textContent = p.ver || "";
