@@ -34,6 +34,13 @@
   .hero:hover{background:var(--amber-deep)}
   .hero .new{font:800 11px/1 var(--sans);background:var(--ink);color:var(--amber);display:inline-block;padding:4px 7px}
   .hero .name{display:block;font:900 clamp(34px,12vw,46px)/.92 var(--sans);letter-spacing:-.045em;margin:20px 0 8px}
+  .hero.pic{padding:0;overflow:hidden}
+  .hero.pic img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+  .hero.pic .cap{padding:9px 14px 10px}
+  .hero.pic .new{margin-right:6px}
+  .hero.pic .meta{margin-top:0}
+  .item.pic{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center}
+  .item.pic img{width:92px;aspect-ratio:16/9;object-fit:cover;display:block}
   .hero .desc{font-size:13px;line-height:1.35;max-width:26ch;font-weight:500}
   .hero .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font:800 13px/1 var(--sans)}
 
@@ -90,20 +97,20 @@ const GR = "https://nodnxd.gumroad.com/l";
 const PRODUCTS = [
   { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46", hero:true,
     tag:{ en:"New bundle", ko:"새 번들", ja:"新バンドル" },
-    url:GR+"/complete",
+    url:GR+"/complete", img:"../img/bundle/complete.jpg",
     desc:{ en:"Every NEN device in one: Set Monitor, Strip Silence, Drum Slicer, Elsewhere, Elsewhen.",
            ko:"NEN 디바이스 전부를 한 번에. Set Monitor, Strip Silence, Drum Slicer, Elsewhere, Elsewhen.",
            ja:"NENの全デバイスをひとつに。Set Monitor、Strip Silence、Drum Slicer、Elsewhere、Elsewhen。" } },
   { id:"spacetime", name:"Space & Time", price:"$39",
-    url:GR+"/spacetime",
-    desc:{ en:"Elsewhere + Elsewhen. Move a sound to another place, then another time. Save $9.",
-           ko:"Elsewhere + Elsewhen. 소리를 다른 곳으로, 다른 때로. $9 할인.",
-           ja:"Elsewhere + Elsewhen。音を別の場所へ、別の時間へ。$9お得。" } },
+    url:GR+"/spacetime", img:"../img/bundle/spacetime.jpg",
+    desc:{ en:"Elsewhere + Elsewhen. Save $9.",
+           ko:"Elsewhere + Elsewhen. $9 할인.",
+           ja:"Elsewhere + Elsewhen。$9お得。" } },
   { id:"cutslice", name:"Cut & Slice", price:"$39",
-    url:GR+"/cutslice",
-    desc:{ en:"Strip Silence + Drum Slicer. Clean vocals, chop drums. Save $9.",
-           ko:"Strip Silence + Drum Slicer. 보컬 정리와 드럼 슬라이스. $9 할인.",
-           ja:"Strip Silence + Drum Slicer。ボーカル整理とドラムのスライス。$9お得。" } }
+    url:GR+"/cutslice", img:"../img/bundle/cutslice.jpg",
+    desc:{ en:"Strip Silence + Drum Slicer. Save $9.",
+           ko:"Strip Silence + Drum Slicer. $9 할인.",
+           ja:"Strip Silence + Drum Slicer。$9お得。" } }
 ];
 
 const T = {
@@ -144,16 +151,17 @@ function render(){
   PRODUCTS.forEach(p=>{
     const d = p.desc[LANG] || p.desc.en;
     if (p.hero){
-      hero.innerHTML = '<span class="new"></span><span class="name"></span><p class="desc"></p><div class="meta"><span class="ver"></span><span class="price"></span></div>';
+      if (p.img) { hero.classList.add("pic"); hero.innerHTML = '<img alt=""><div class="cap"><div class="meta"><span><span class="new"></span> <span class="ver"></span></span><span class="price"></span></div></div>'; hero.querySelector("img").src = p.img; hero.querySelector("img").alt = p.name; }
+      else hero.innerHTML = '<span class="new"></span><span class="name"></span><p class="desc"></p><div class="meta"><span class="ver"></span><span class="price"></span></div>';
       hero.querySelector(".new").textContent = (p.tag && (p.tag[LANG]||p.tag.en)) || L.newtag;
-      hero.querySelector(".name").textContent = p.name;
-      hero.querySelector(".desc").textContent = d;
+      if (!p.img) { hero.querySelector(".name").textContent = p.name; hero.querySelector(".desc").textContent = d; }
       hero.querySelector(".ver").textContent = p.ver || "";
       hero.querySelector(".price").textContent = p.price;
       wire(hero, p.url);
     } else {
       const a = document.createElement("a"); a.className = "item"; a.setAttribute("role","link");
-      a.innerHTML = '<div class="row"><span class="name"></span><span class="price"></span></div><p class="desc"></p>';
+      if (p.img) { a.classList.add("pic"); a.innerHTML = '<img alt=""><div><div class="row"><span class="name"></span><span class="price"></span></div><p class="desc"></p></div>'; a.querySelector("img").src = p.img; }
+      else a.innerHTML = '<div class="row"><span class="name"></span><span class="price"></span></div><p class="desc"></p>';
       a.querySelector(".name").textContent = p.name;
       a.querySelector(".price").textContent = p.price;
       a.querySelector(".desc").textContent = d;
