@@ -62,6 +62,7 @@
   .badge{font:800 9.5px/1 var(--sans);letter-spacing:.04em;padding:3px 5px;border-radius:2px;white-space:nowrap}
   .badge.up{background:var(--amber);color:var(--ink)}
   .badge.new{background:var(--paper);color:var(--ink)}
+  .badge.have{background:none;color:var(--mute);border:1px solid var(--line)}
   #devlist{border-top:1px solid var(--line)}
   .all{display:flex;justify-content:space-between;align-items:center;border:2px solid var(--paper);color:var(--paper);
     padding:11px 14px;text-decoration:none;font:800 14px/1 var(--sans);cursor:pointer;transition:background .12s,color .12s}
@@ -107,13 +108,23 @@ const SRC = "utm_source=hub&utm_medium=device";
 const SITE = "https://nen-stuio.vercel.app/plug-ins/m4l";
 
 const GR = "https://nodnxd.gumroad.com/l";
+/* HUB가 넘겨주는 내 컴퓨터의 설치 버전: 주소 # 뒤 "have=id:설치:최신,..." (서버로 전송되지 않음) */
+function vnum(v){ const p=String(v||"").replace(/^v/,"").split("."); return (+p[0]||0)*1e6+(+p[1]||0)*1e3+(parseInt(p[2],10)||0); }
+function readHave(){
+  const m = location.hash.match(/have=([^&]*)/), out = {};
+  if (m) decodeURIComponent(m[1]).split(",").forEach(x=>{ const a=x.split(":"); if(a[0]) out[a[0]]={have:a[1]||"?",latest:a[2]||""}; });
+  return out;
+}
+let HAVE = readHave();
+window.addEventListener("hashchange", ()=>{ HAVE = readHave(); render(); });
+const LIB = "https://app.gumroad.com/library";
 /* 개별 디바이스: badge "up" = 업데이트됨, "new" = 신규, "" = 표시 없음 (버전 올릴 때 여기만 고치면 됨) */
 const DEVICES = [
-  { name:"Set Monitor",   ver:"v4.11",  price:"$29", badge:"up",  url:SITE+"/set-monitor" },
-  { name:"Strip Silence", ver:"v1.5",   price:"$19", badge:"up",  url:SITE+"/strip-silence" },
-  { name:"Drum Slicer",   ver:"v1.2.0", price:"$29", badge:"up",  url:SITE+"/drum-slicer" },
-  { name:"Elsewhere",     ver:"v0.7",   price:"$29", badge:"",    url:SITE+"/elsewhere" },
-  { name:"Elsewhen",      ver:"v1.0b6", price:"$19", badge:"new", url:SITE+"/elsewhen" }
+  { id:"setmonitor", name:"Set Monitor",   ver:"v4.11",  price:"$29", badge:"up",  url:SITE+"/set-monitor" },
+  { id:"stripsilence", name:"Strip Silence", ver:"v1.5",   price:"$19", badge:"up",  url:SITE+"/strip-silence" },
+  { id:"drumslicer", name:"Drum Slicer",   ver:"v1.2.0", price:"$29", badge:"up",  url:SITE+"/drum-slicer" },
+  { id:"elsewhere", name:"Elsewhere",     ver:"v0.7",   price:"$29", badge:"",    url:SITE+"/elsewhere" },
+  { id:"elsewhen", name:"Elsewhen",      ver:"v1.0b6", price:"$19", badge:"new", url:SITE+"/elsewhen" }
 ];
 const PRODUCTS = [
   { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46", hero:true,
@@ -135,9 +146,9 @@ const PRODUCTS = [
 ];
 
 const T = {
-  en:{ lead:"HUB is free. These are our other devices for Ableton Live.", all:"See all plug-ins", newtag:"New", foot:"Drag in. No installer.", bundles:"Bundles", devs:"Devices", devnote:"", up:"Updated", nw:"New" },
-  ko:{ lead:"HUB는 무료예요. Ableton Live용 다른 디바이스도 만나보세요.", all:"플러그인 전체 보기", newtag:"신규", foot:"끌어다 놓기만 하면 끝. 설치 프로그램 없음.", bundles:"번들", devs:"디바이스", devnote:"", up:"업데이트", nw:"신규" },
-  ja:{ lead:"HUBは無料です。Ableton Live用のほかのデバイスもどうぞ。", all:"すべてのプラグインを見る", newtag:"新着", foot:"ドラッグするだけ。インストーラー不要。", bundles:"バンドル", devs:"デバイス", devnote:"", up:"アップデート", nw:"新着" }
+  en:{ lead:"HUB is free. These are our other devices for Ableton Live.", all:"See all plug-ins", newtag:"New", foot:"Drag in. No installer.", bundles:"Bundles", devs:"Devices", devnote:"", up:"Updated", nw:"New", have:"Installed", upd:"Update" },
+  ko:{ lead:"HUB는 무료예요. Ableton Live용 다른 디바이스도 만나보세요.", all:"플러그인 전체 보기", newtag:"신규", foot:"끌어다 놓기만 하면 끝. 설치 프로그램 없음.", bundles:"번들", devs:"디바이스", devnote:"", up:"업데이트", nw:"신규", have:"설치됨", upd:"업데이트" },
+  ja:{ lead:"HUBは無料です。Ableton Live用のほかのデバイスもどうぞ。", all:"すべてのプラグインを見る", newtag:"新着", foot:"ドラッグするだけ。インストーラー不要。", bundles:"バンドル", devs:"デバイス", devnote:"", up:"アップデート", nw:"新着", have:"インストール済み", upd:"アップデート" }
 };
 
 /* 외부 링크: Max jweb → 엔진 → 기본 브라우저. 일반 브라우저에선 새 탭 */
@@ -195,8 +206,16 @@ function render(){
     const a = document.createElement("a"); a.className = "mini"; a.setAttribute("role","link");
     a.innerHTML = '<span class="name"></span><span class="ver"></span><span class="price"></span>';
     a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; a.querySelector(".price").textContent = d.price;
-    if (d.badge) { const b = document.createElement("span"); b.className = "badge " + d.badge; b.textContent = d.badge === "up" ? L.up : L.nw; a.insertBefore(b, a.querySelector(".price")); }
-    wire(a, d.url); dl.appendChild(a);
+    const h = HAVE[d.id];
+    let cls = d.badge, txt = d.badge === "up" ? L.up : L.nw, url = d.url;
+    if (h) {                                   // 설치돼 있음: 최신 여부로 표시
+      if (h.latest && h.have !== "?" && vnum(h.have) < vnum(h.latest)) { cls = "up"; txt = L.upd + " v" + h.have.replace(/^v/,"") + " → v" + h.latest.replace(/^v/,""); url = LIB; }
+      else { cls = "have"; txt = L.have + (h.have && h.have !== "?" ? " v" + h.have.replace(/^v/,"") : ""); }
+      a.querySelector(".ver").textContent = "";
+      a.querySelector(".price").textContent = "";
+    }
+    if (cls) { const b = document.createElement("span"); b.className = "badge " + cls; b.textContent = txt; a.insertBefore(b, a.querySelector(".price")); }
+    wire(a, url); dl.appendChild(a);
   });
   const all = document.getElementById("all");
   all.innerHTML = '<span></span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 8h11M9 3l5 5-5 5"/></svg>';
