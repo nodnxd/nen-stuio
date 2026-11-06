@@ -41,7 +41,7 @@
   </div>
 </div>
 <a class="card" id="card" role="link">
-  <div class="vid"><video muted loop playsinline autoplay preload="auto" poster="../img/soon/nametag-ad.jpg" aria-label="Name Tag">
+  <div class="vid"><video muted playsinline autoplay preload="auto" poster="../img/soon/nametag-ad.jpg" aria-label="Name Tag">
     <source src="../video/nametag-ad.webm" type="video/webm"><source src="../video/nametag-ad.mp4" type="video/mp4"></video></div>
   <div class="cap">
     <div class="row"><span class="name">Name Tag</span><span class="price"><s>$12</s>$8.40</span></div>
@@ -77,7 +77,15 @@ function render(){
 }
 document.querySelectorAll(".lang button").forEach(b => b.onclick = () => { LANG = b.dataset.lang; try{localStorage.setItem("hub_lang",LANG)}catch(e){} render(); });
 render();
-const v = document.querySelector("video"); if (v.play) v.play().catch(()=>{});
+/* 가볍게: 두 번 돌면 멈춤 → 마우스를 올리면 다시 재생. 창이 가려지면 바로 멈춤 */
+const v = document.querySelector("video");
+let loops = 0;
+v.loop = false;
+v.addEventListener("ended", () => { loops++; if (loops < 2) { v.currentTime = 0; v.play().catch(()=>{}); } });
+card.addEventListener("mouseenter", () => { if (v.paused) { loops = 0; v.currentTime = 0; v.play().catch(()=>{}); } });
+document.addEventListener("visibilitychange", () => { if (document.hidden) v.pause(); });
+window.addEventListener("blur", () => v.pause());
+v.play().catch(()=>{});
 
 window.addEventListener("storage", e=>{ if(e.key==="hub_lang"&&e.newValue&&e.newValue!==LANG){ LANG=e.newValue; render(); } });   // 두 칸 언어 같이 바뀌게
 </script>
