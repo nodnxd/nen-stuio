@@ -40,7 +40,7 @@
   .hero.pic .new{margin-right:6px}
   .hero.pic .meta{margin-top:0}
   .hero.soon{background:#1b1b1a;color:var(--paper);cursor:default}
-  .hero.soon:hover{background:#1b1b1a}
+  .hero.soon:hover{background:#232321}
   .hero.soon video,.hero.soon img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;background:#111}
   .hero.soon .new{background:var(--amber);color:var(--ink)}
   .hero.soon .t{font:900 20px/1 var(--sans);letter-spacing:-.02em}
@@ -137,9 +137,9 @@ const DEVICES = [
   { id:"elsewhen", name:"Elsewhen",      ver:"v1.1", price:"$19", badge:"new", url:SITE+"/elsewhen" }
 ];
 /* 맨 위 큰 칸: 곧 나올 제품 (없으면 SOON = null → NEN Complete 대신 hero 쓰려면 PRODUCTS에 hero:true) */
-const SOON = { name:"Name Tag", price:"$12", url:"",
+const SOON = { name:"Name Tag", price:"$12", url:GR+"/nametag",
   video:["../video/nametag-soon.webm","../video/nametag-soon.mp4"], poster:"../img/soon/nametag.jpg",
-  tag:{ en:"Coming soon", ko:"곧 출시", ja:"近日公開" },
+  tag:{ en:"New · v1.1.0", ko:"신규 · v1.1.0", ja:"新着 · v1.1.0" },
   desc:{ en:"Clean track names in one click.",
          ko:"트랙 이름 정리, 클릭 한 번.",
          ja:"トラック名をワンクリックで整理。" } };
