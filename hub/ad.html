@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>HUB · New</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0e0e0e;--paper:#ecebe7;--amber:#f4a62a;--amber-deep:#e08f0c;--mute:#8d8b85;--line:#2a2a28;
+    --sans:"Archivo","Helvetica Neue","Apple SD Gothic Neo","Hiragino Sans","Noto Sans CJK KR",Arial,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ink);color:var(--paper);font:500 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden;word-break:keep-all}
+  body{height:100vh;padding:8px 12px 10px;display:flex;flex-direction:column;gap:9px}
+  .top{display:flex;align-items:center;justify-content:space-between;height:40px}
+  .tag{font:800 11px/1 var(--sans);background:var(--amber);color:var(--ink);padding:5px 8px}
+  .lang{display:flex;gap:2px}
+  .lang button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:800 11px/1 var(--sans);padding:6px 5px;cursor:pointer}
+  .lang button[aria-pressed="true"]{color:var(--paper);border-bottom-color:var(--amber)}
+  a.card{flex:1;display:flex;flex-direction:column;background:#1b1b1a;color:inherit;text-decoration:none;cursor:pointer;min-height:0;transition:background .15s}
+  a.card:hover{background:#232321}
+  .vid{position:relative;flex:1;min-height:0;overflow:hidden;background:#1d1e23}
+  .vid video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
+  .cap{padding:12px 14px 14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .name{font:900 30px/1 var(--sans);letter-spacing:-.03em}
+  .price{font:800 18px/1 var(--sans);color:var(--amber);white-space:nowrap}
+  .price s{color:var(--mute);font-weight:500;font-size:14px;margin-right:6px}
+  .desc{color:var(--mute);font-size:12.5px;margin-top:6px;line-height:1.35}
+  .sale{margin-top:10px;border:2px solid var(--amber);color:var(--amber);padding:9px 11px;font:800 13px/1.3 var(--sans)}
+  .sale code{font:900 15px/1 var(--sans);letter-spacing:.04em;color:var(--paper)}
+  .cta{margin-top:10px;display:flex;justify-content:space-between;align-items:center;background:var(--amber);color:var(--ink);padding:12px 14px;font:800 14px/1 var(--sans)}
+  a.card:hover .cta{background:var(--amber-deep)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="top"><span class="tag" data-t="tag"></span>
+  <div class="lang" role="group" aria-label="Language">
+    <button data-lang="en" aria-pressed="false">EN</button><button data-lang="ko" aria-pressed="false">KO</button><button data-lang="ja" aria-pressed="false">JA</button>
+  </div>
+</div>
+<a class="card" id="card" role="link">
+  <div class="vid"><video muted loop playsinline autoplay preload="auto" poster="../img/soon/nametag-ad.jpg" aria-label="Name Tag">
+    <source src="../video/nametag-ad.webm" type="video/webm"><source src="../video/nametag-ad.mp4" type="video/mp4"></video></div>
+  <div class="cap">
+    <div class="row"><span class="name">Name Tag</span><span class="price"><s>$12</s>$8.40</span></div>
+    <p class="desc" data-t="desc"></p>
+    <div class="sale"><span data-t="sale"></span> <code>NAMETAG30</code><br><span data-t="until"></span></div>
+    <div class="cta"><span data-t="cta"></span><span>→</span></div>
+  </div>
+</a>
+<script>
+/* HUB 오른쪽 광고 칸 — 지금 홍보할 제품 하나만. 바꿀 때는 이 파일만 고치면 됨 */
+const URL_ = "https://nodnxd.gumroad.com/l/nametag/NAMETAG30?utm_source=hub&utm_medium=device&utm_content=side";
+const T = {
+  en:{tag:"New · Max for Live", desc:"Clean track names in one click. Numbered, prefixed, colored.", sale:"Launch sale −30% · code", until:"Until Dec 7, 2026", cta:"Get Name Tag"},
+  ko:{tag:"신규 · Max for Live", desc:"트랙 이름 정리, 클릭 한 번. 번호·접두어·색상까지.", sale:"출시 기념 30% 할인 · 코드", until:"2026년 12월 7일까지", cta:"Name Tag 받기"},
+  ja:{tag:"新着 · Max for Live", desc:"トラック名をワンクリックで整理。番号・プレフィックス・カラーまで。", sale:"発売記念 30%オフ · コード", until:"2026年12月7日まで", cta:"Name Tag を入手"}
+};
+let LASTOPEN = 0;
+function openExternal(url){
+  const now = Date.now(); if (now - LASTOPEN < 1000) return; LASTOPEN = now;
+  try{ if (window.max && typeof window.max.outlet === "function") { window.max.outlet("openurl", url); return; } }catch(e){}
+  window.open(url, "_blank", "noopener");
+}
+const card = document.getElementById("card");
+card.href = URL_;
+card.onclick = ev => { ev.preventDefault(); openExternal(URL_); };
+let LANG = "en";
+try{ const sv = localStorage.getItem("hub_lang"); const nav = (navigator.language||"en").slice(0,2); LANG = sv || (T[nav] ? nav : "en"); }catch(e){}
+if (!T[LANG]) LANG = "en";
+function render(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = T[LANG][el.dataset.t]);
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang===LANG)));
+}
+document.querySelectorAll(".lang button").forEach(b => b.onclick = () => { LANG = b.dataset.lang; try{localStorage.setItem("hub_lang",LANG)}catch(e){} render(); });
+render();
+const v = document.querySelector("video"); if (v.play) v.play().catch(()=>{});
+
+window.addEventListener("storage", e=>{ if(e.key==="hub_lang"&&e.newValue&&e.newValue!==LANG){ LANG=e.newValue; render(); } });   // 두 칸 언어 같이 바뀌게
+</script>
+</body>
+</html>

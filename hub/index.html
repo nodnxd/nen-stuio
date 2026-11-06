@@ -143,8 +143,10 @@ const SOON = { name:"Name Tag", price:"$8.40", was:"$12", url:GR+"/nametag/NAMET
   desc:{ en:"Launch sale −30% · code NAMETAG30 · until Dec 7, 2026",
          ko:"출시 기념 30% 할인 · 코드 NAMETAG30 · 2026년 12월 7일까지",
          ja:"発売記念30%オフ · NAMETAG30 · 2026/12/7まで" } };
+/* HUB 1.6.3+는 오른쪽에 광고 칸(ad.html)을 따로 띄우고 주소에 side=2를 붙임 → 여기서는 Name Tag 칸을 빼고 NEN Complete를 위로 */
+const SIDE = /[?&]side=2/.test(location.search);
 const PRODUCTS = [
-  { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46",
+  { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46", hero:SIDE,
     tag:{ en:"New bundle", ko:"새 번들", ja:"新バンドル" },
     url:GR+"/complete", img:"../img/bundle/complete.jpg",
     desc:{ en:"All 5 NEN devices. Save $46.",
@@ -169,7 +171,11 @@ const T = {
 };
 
 /* 외부 링크: Max jweb → 엔진 → 기본 브라우저. 일반 브라우저에선 새 탭 */
+let LASTOPEN = {u:"", t:0};
 function openExternal(url){
+  const now = Date.now();                       // 같은 링크가 1초 안에 두 번 열리지 않게
+  if (LASTOPEN.u === url && now - LASTOPEN.t < 1000) return;
+  LASTOPEN = {u:url, t:now};
   try{
     if (window.max && typeof window.max.outlet === "function") { window.max.outlet("openurl", url); return; }
   }catch(e){}
@@ -178,7 +184,7 @@ function openExternal(url){
 function withSrc(u){ return u + (u.indexOf("?")>-1 ? "&" : "?") + SRC; }
 function wire(a, url){
   a.href = withSrc(url);
-  a.addEventListener("click", ev=>{ ev.preventDefault(); openExternal(a.href); });
+  a.onclick = ev=>{ ev.preventDefault(); openExternal(a.href); };   // render()가 여러 번 돌아도 핸들러는 하나만
 }
 
 let LANG = "en";
@@ -197,7 +203,7 @@ function render(){
 
   const hero = document.getElementById("hero"), list = document.getElementById("products");
   hero.textContent = ""; list.textContent = "";
-  if (SOON){
+  if (SOON && !SIDE){
     hero.className = "hero pic soon";
     hero.innerHTML = '<video muted loop playsinline autoplay preload="auto"></video><div class="cap"><div class="meta"><span><span class="new"></span> <span class="t"></span></span><span class="price"></span></div><p class="d"></p></div>';
     const v = hero.querySelector("video"); v.poster = SOON.poster; v.setAttribute("aria-label", SOON.name);
@@ -258,6 +264,8 @@ document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",
   LANG=b.dataset.lang; try{localStorage.setItem("hub_lang",LANG)}catch(e){} render();
 }));
 render();
+
+window.addEventListener("storage", e=>{ if(e.key==="hub_lang"&&e.newValue&&e.newValue!==LANG){ LANG=e.newValue; render(); } });   // 두 칸 언어 같이 바뀌게
 </script>
 </body>
 </html>
