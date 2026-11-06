@@ -39,8 +39,17 @@
   .hero.pic .cap{padding:9px 14px 10px}
   .hero.pic .new{margin-right:6px}
   .hero.pic .meta{margin-top:0}
-  .item.pic{display:grid;grid-template-columns:92px 1fr;gap:10px;align-items:center}
-  .item.pic img{width:92px;aspect-ratio:16/9;object-fit:cover;display:block}
+  .hero.soon{background:#1b1b1a;color:var(--paper);cursor:default}
+  .hero.soon:hover{background:#1b1b1a}
+  .hero.soon video,.hero.soon img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;background:#111}
+  .hero.soon .new{background:var(--amber);color:var(--ink)}
+  .hero.soon .t{font:900 20px/1 var(--sans);letter-spacing:-.02em}
+  .hero.soon .d{color:var(--mute);font-size:12px;line-height:1.3;margin-top:4px}
+  .hero.soon .price{color:var(--amber)}
+  .item.pic .name{font-size:16px}
+  .item.pic .desc{margin-top:1px}
+  .item.pic{display:grid;grid-template-columns:64px 1fr;gap:10px;align-items:center;padding-top:5px;padding-bottom:5px}
+  .item.pic img{width:64px;aspect-ratio:16/9;object-fit:cover;display:block}
   .hero .desc{font-size:13px;line-height:1.35;max-width:26ch;font-weight:500}
   .hero .meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font:800 13px/1 var(--sans)}
 
@@ -126,13 +135,20 @@ const DEVICES = [
   { id:"elsewhere", name:"Elsewhere",     ver:"v0.8",   price:"$29", badge:"",    url:SITE+"/elsewhere" },
   { id:"elsewhen", name:"Elsewhen",      ver:"v1.1", price:"$19", badge:"new", url:SITE+"/elsewhen" }
 ];
+/* 맨 위 큰 칸: 곧 나올 제품 (없으면 SOON = null → NEN Complete 대신 hero 쓰려면 PRODUCTS에 hero:true) */
+const SOON = { name:"Name Tag", price:"$12", url:"",
+  video:["../video/nametag-soon.webm","../video/nametag-soon.mp4"], poster:"../img/soon/nametag.jpg",
+  tag:{ en:"Coming soon", ko:"곧 출시", ja:"近日公開" },
+  desc:{ en:"Clean track names in one click.",
+         ko:"트랙 이름 정리, 클릭 한 번.",
+         ja:"トラック名をワンクリックで整理。" } };
 const PRODUCTS = [
-  { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46", hero:true,
+  { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46",
     tag:{ en:"New bundle", ko:"새 번들", ja:"新バンドル" },
     url:GR+"/complete", img:"../img/bundle/complete.jpg",
-    desc:{ en:"Every NEN device in one: Set Monitor, Strip Silence, Drum Slicer, Elsewhere, Elsewhen.",
-           ko:"NEN 디바이스 전부를 한 번에. Set Monitor, Strip Silence, Drum Slicer, Elsewhere, Elsewhen.",
-           ja:"NENの全デバイスをひとつに。Set Monitor、Strip Silence、Drum Slicer、Elsewhere、Elsewhen。" } },
+    desc:{ en:"All 5 NEN devices. Save $46.",
+           ko:"NEN 디바이스 5개 전부. $46 할인.",
+           ja:"NENの全5デバイス。$46お得。" } },
   { id:"spacetime", name:"Space & Time", price:"$39",
     url:GR+"/spacetime", img:"../img/bundle/spacetime.jpg",
     desc:{ en:"Elsewhere + Elsewhen. Save $9.",
@@ -180,6 +196,19 @@ function render(){
 
   const hero = document.getElementById("hero"), list = document.getElementById("products");
   hero.textContent = ""; list.textContent = "";
+  if (SOON){
+    hero.className = "hero pic soon";
+    hero.innerHTML = '<video muted loop playsinline autoplay preload="auto"></video><div class="cap"><div class="meta"><span><span class="new"></span> <span class="t"></span></span><span class="price"></span></div><p class="d"></p></div>';
+    const v = hero.querySelector("video"); v.poster = SOON.poster; v.setAttribute("aria-label", SOON.name);
+    SOON.video.forEach(src=>{ const so=document.createElement("source"); so.src=src; so.type=src.endsWith(".webm")?"video/webm":"video/mp4"; v.appendChild(so); });
+    v.addEventListener("error", ()=>{}, true);
+    hero.querySelector(".new").textContent = SOON.tag[LANG]||SOON.tag.en;
+    hero.querySelector(".t").textContent = SOON.name;
+    hero.querySelector(".price").textContent = SOON.price;
+    hero.querySelector(".d").textContent = SOON.desc[LANG]||SOON.desc.en;
+    if (SOON.url) { hero.style.cursor = "pointer"; wire(hero, SOON.url); } else hero.removeAttribute("role");
+    v.play && v.play().catch(()=>{});
+  }
   PRODUCTS.forEach(p=>{
     const d = p.desc[LANG] || p.desc.en;
     if (p.hero){
