@@ -56,7 +56,9 @@
 </a>
 <script>
 /* HUB 오른쪽 광고 칸 — 지금 홍보할 제품 하나만. 바꿀 때는 이 파일만 고치면 됨 */
-const URL_ = "https://nodnxd.gumroad.com/l/nametag/NAMETAG30?utm_source=hub&utm_medium=device&utm_content=side";
+const SALE_OVER = Date.now() > Date.parse("2026-12-07T23:59:59+09:00");   // 할인 끝나면 자동 정가
+const URL_ = "https://nodnxd.gumroad.com/l/nametag" + (SALE_OVER ? "" : "/NAMETAG30") + "?utm_source=hub&utm_medium=device&utm_content=side";
+if (SALE_OVER) { document.querySelector(".sale").remove(); document.querySelector(".price").innerHTML = "$12"; }
 const T = {
   en:{tag:"New · Max for Live", desc:"Clean track names in one click. Numbered, prefixed, colored.", sale:"Launch sale −30% · code", until:"Until Dec 7, 2026", cta:"Get Name Tag"},
   ko:{tag:"신규 · Max for Live", desc:"트랙 이름 정리, 클릭 한 번. 번호·접두어·색상까지.", sale:"출시 기념 30% 할인 · 코드", until:"2026년 12월 7일까지", cta:"Name Tag 받기"},

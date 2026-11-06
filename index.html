@@ -343,7 +343,7 @@ h1,h2,h3,p{margin:0}
         <button class="tab press" role="tab" id="t-drum-slicer" aria-controls="p-drum-slicer" aria-selected="false" tabindex="-1" data-dev="drum-slicer"><b>Drum Slicer</b><span class="num">v1.2.0 · $29</span></button>
         <button class="tab press" role="tab" id="t-elsewhere" aria-controls="p-elsewhere" aria-selected="false" tabindex="-1" data-dev="elsewhere"><b>Elsewhere</b><span class="num">v0.8 · $29</span></button>
         <button class="tab press" role="tab" id="t-elsewhen" aria-controls="p-elsewhen" aria-selected="false" tabindex="-1" data-dev="elsewhen"><b>Elsewhen</b><span class="num">v1.1 · $19</span></button>
-        <button class="tab press" role="tab" id="t-name-tag" aria-controls="p-name-tag" aria-selected="false" tabindex="-1" data-dev="name-tag"><b>Name Tag</b><span class="num">v1.1.0 · <s>$12</s> $8.40</span></button>
+        <button class="tab press" role="tab" id="t-name-tag" aria-controls="p-name-tag" aria-selected="false" tabindex="-1" data-dev="name-tag"><b>Name Tag</b><span class="num nt-num">v1.1.0 · <s>$12</s> $8.40</span></button>
         <button class="tab press" role="tab" id="t-hub" aria-controls="p-hub" aria-selected="false" tabindex="-1" data-dev="hub"><b>HUB</b><span class="num">v1.6.5 · Free</span></button>
       </div>
 
@@ -433,7 +433,7 @@ h1,h2,h3,p{margin:0}
       </div>
 
       <div class="panel" role="tabpanel" id="p-name-tag" aria-labelledby="t-name-tag" hidden>
-        <p class="hubx" style="margin:0 0 12px;color:var(--accent)"><b data-i18n="nt.sale">Launch sale: 30% off with code NAMETAG30, until Dec 7, 2026.</b></p>
+        <p class="hubx nt-sale" style="margin:0 0 12px;color:var(--accent)"><b data-i18n="nt.sale">Launch sale: 30% off with code NAMETAG30, until Dec 7, 2026.</b></p>
         <ul class="bands">
           <li><span class="v">NAMES</span><span class="t"><span data-i18n="b.nt1t">Select tracks, click a name</span><span class="n" data-i18n="b.nt1n">Rhythm, Bass, Harmony, Vocal and FX lists ready to click. Add, rename or delete any name; your list is kept for every set.</span></span></li>
           <li><span class="v">NUMBER</span><span class="t"><span data-i18n="b.nt2t">Kick 1, Kick 2, numbered for you</span><span class="n" data-i18n="b.nt2n">Same names get numbers in track order. Names that already end in a number, like 808, stay as they are.</span></span></li>
@@ -542,7 +542,7 @@ h1,h2,h3,p{margin:0}
     'drum-slicer':{name:'Drum Slicer',price:'$29',url:'https://nodnxd.gumroad.com/l/drumslicer'},
     'elsewhere':{name:'Elsewhere',price:'$29',url:'https://nodnxd.gumroad.com/l/elsewhere'},
     'elsewhen':{name:'Elsewhen',price:'$19',url:'https://nodnxd.gumroad.com/l/elsewhen'},
-    'name-tag':{name:'Name Tag',price:'$8.40',url:'https://nodnxd.gumroad.com/l/nametag/NAMETAG30'},
+    'name-tag':(Date.now()>Date.parse('2026-12-07T23:59:59+09:00'))?{name:'Name Tag',price:'$12',url:'https://nodnxd.gumroad.com/l/nametag'}:{name:'Name Tag',price:'$8.40',url:'https://nodnxd.gumroad.com/l/nametag/NAMETAG30'},
     'hub':{name:'HUB',price:'Free',url:'/downloads/HUB_v1.6.5.zip',free:true}
   };
   var T={
@@ -734,6 +734,9 @@ h1,h2,h3,p{margin:0}
   route();
   if(location.hash==='#bundles')requestAnimationFrame(jump);
 })();
+
+/* Name Tag 출시 할인 자동 종료 (2026-12-07 23:59 KST) */
+if(Date.now()>Date.parse("2026-12-07T23:59:59+09:00")){document.querySelectorAll(".nt-sale").forEach(function(e){e.remove()});document.querySelectorAll(".nt-num").forEach(function(e){e.textContent="v1.1.0 · $12"});}
 </script>
 </body>
 </html>

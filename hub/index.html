@@ -138,10 +138,12 @@ const DEVICES = [
   { id:"stripsilence", name:"Strip Silence", ver:"v1.5",   price:"$19", badge:"up",  url:SITE+"/strip-silence" },
   { id:"drumslicer", name:"Drum Slicer",   ver:"v1.2.0", price:"$29", badge:"up",  url:SITE+"/drum-slicer" },
   { id:"elsewhere", name:"Elsewhere",     ver:"v0.8",   price:"$29", badge:"",    url:SITE+"/elsewhere" },
-  { id:"elsewhen", name:"Elsewhen",      ver:"v1.1", price:"$19", badge:"new", url:SITE+"/elsewhen" }
+  { id:"elsewhen", name:"Elsewhen",      ver:"v1.1", price:"$19", badge:"new", url:SITE+"/elsewhen" },
+  { id:"nametag", name:"Name Tag",      ver:"v1.1.0", price:"$12", badge:"new", url:SITE+"/name-tag", sideOnly:true }   // 칸이 하나인 옛 HUB에선 높이가 넘쳐서 SIDE일 때만
 ];
 /* 맨 위 큰 칸: 곧 나올 제품 (없으면 SOON = null → NEN Complete 대신 hero 쓰려면 PRODUCTS에 hero:true) */
-const SOON = { name:"Name Tag", price:"$8.40", was:"$12", url:GR+"/nametag/NAMETAG30",
+const SALE_OVER = Date.now() > Date.parse("2026-12-07T23:59:59+09:00");   // Name Tag 출시 할인(NAMETAG30) 끝나면 자동으로 정가 표시
+const SOON = { name:"Name Tag", price:SALE_OVER ? "$12" : "$8.40", was:SALE_OVER ? "" : "$12", url:GR+(SALE_OVER ? "/nametag" : "/nametag/NAMETAG30"),
   video:["../video/nametag-soon.webm","../video/nametag-soon.mp4"], poster:"../img/soon/nametag.jpg",
   tag:{ en:"Out now", ko:"출시", ja:"発売" },
   desc:{ en:"Launch sale −30% · code NAMETAG30 · until Dec 7, 2026",
@@ -208,6 +210,7 @@ function render(){
   const hero = document.getElementById("hero"), list = document.getElementById("products");
   hero.textContent = ""; list.textContent = "";
   if (SOON && !SIDE){
+    if (SALE_OVER) SOON.desc = { en:"Clean track names in one click.", ko:"트랙 이름 정리, 클릭 한 번.", ja:"トラック名をワンクリックで整理。" };
     hero.className = "hero pic soon";
     hero.innerHTML = '<video muted loop playsinline autoplay preload="auto"></video><div class="cap"><div class="meta"><span><span class="new"></span> <span class="t"></span></span><span class="price"></span></div><p class="d"></p></div>';
     const v = hero.querySelector("video"); v.poster = SOON.poster; v.setAttribute("aria-label", SOON.name);
@@ -243,6 +246,7 @@ function render(){
   });
   const dl = document.getElementById("devlist"); dl.textContent = "";
   DEVICES.forEach(d=>{
+    if (d.sideOnly && !SIDE) return;
     const a = document.createElement("a"); a.className = "mini"; a.setAttribute("role","link");
     a.innerHTML = '<span class="name"></span><span class="ver"></span><span class="price"></span>';
     a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; a.querySelector(".price").textContent = d.price;
