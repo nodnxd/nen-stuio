@@ -207,9 +207,11 @@ function render(){
     a.innerHTML = '<span class="name"></span><span class="ver"></span><span class="price"></span>';
     a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; a.querySelector(".price").textContent = d.price;
     const h = HAVE[d.id];
-    let cls = d.badge, txt = d.badge === "up" ? L.up : L.nw, url = d.url;
-    if (h) {                                   // 설치돼 있음: 최신 여부로 표시
-      if (h.latest && h.have !== "?" && vnum(h.have) < vnum(h.latest)) { cls = "up"; txt = L.upd + " v" + h.have.replace(/^v/,"") + " → v" + h.latest.replace(/^v/,""); url = LIB; }
+    /* 설치 정보가 없을 때는 "New"만 표시 ("Updated"는 이미 받은 사람에게 헷갈려서 뺌) */
+    let cls = d.badge === "new" ? "new" : "", txt = L.nw, url = d.url;
+    if (h) {                                   // 설치돼 있음: 최신 여부로 표시 (최신 = HUB가 받은 값, 없으면 이 페이지의 버전)
+      const latest = h.latest || d.ver;
+      if (h.have !== "?" && vnum(h.have) < vnum(latest)) { cls = "up"; txt = L.upd + " v" + h.have.replace(/^v/,"") + " → v" + latest.replace(/^v/,""); url = LIB; }
       else { cls = "have"; txt = L.have + (h.have && h.have !== "?" ? " v" + h.have.replace(/^v/,"") : ""); }
       a.querySelector(".ver").textContent = "";
       a.querySelector(".price").textContent = "";
