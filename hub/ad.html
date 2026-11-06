@@ -7,7 +7,10 @@
 <title>HUB · New</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#0e0e0e;--paper:#ecebe7;--amber:#f4a62a;--amber-deep:#e08f0c;--mute:#8d8b85;--line:#2a2a28;
+  :root.light .item .price,:root.light .mini .price,:root.light .cap .price,:root.light .sale,:root.light .hero.soon .d,:root.light .hero.soon .price{color:#b86f00;border-color:#b86f00}
+  :root.light{--ink:#ecebe7;--paper:#0e0e0e;--mute:#6b6a65;--line:#cfcdc6;--row:#e1e0db;--card:#e1e0db;--card-h:#d8d7d1}
+
+  :root{--card:#1b1b1a;--card-h:#232321;--ink:#0e0e0e;--paper:#ecebe7;--amber:#f4a62a;--amber-deep:#e08f0c;--mute:#8d8b85;--line:#2a2a28;
     --sans:"Archivo","Helvetica Neue","Apple SD Gothic Neo","Hiragino Sans","Noto Sans CJK KR",Arial,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--ink);color:var(--paper);font:500 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden;word-break:keep-all}
@@ -17,8 +20,8 @@
   .lang{display:flex;gap:2px}
   .lang button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:800 11px/1 var(--sans);padding:6px 5px;cursor:pointer}
   .lang button[aria-pressed="true"]{color:var(--paper);border-bottom-color:var(--amber)}
-  a.card{flex:1;display:flex;flex-direction:column;background:#1b1b1a;color:inherit;text-decoration:none;cursor:pointer;min-height:0;transition:background .15s}
-  a.card:hover{background:#232321}
+  a.card{flex:1;display:flex;flex-direction:column;background:var(--card);color:inherit;text-decoration:none;cursor:pointer;min-height:0;transition:background .15s}
+  a.card:hover{background:var(--card-h)}
   .vid{position:relative;flex:1;min-height:0;overflow:hidden;background:#1d1e23}
   .vid video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top}
   .cap{padding:12px 14px 14px}
@@ -33,6 +36,7 @@
   a.card:hover .cta{background:var(--amber-deep)}
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
+<script>if(/[?&]theme=light/.test(location.search))document.documentElement.classList.add("light");</script>
 </head>
 <body>
 <div class="top"><span class="tag" data-t="tag"></span>
