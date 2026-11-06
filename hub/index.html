@@ -44,7 +44,7 @@
   .hero.soon video,.hero.soon img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;background:#111}
   .hero.soon .new{background:var(--amber);color:var(--ink)}
   .hero.soon .t{font:900 20px/1 var(--sans);letter-spacing:-.02em}
-  .hero.soon .d{color:var(--mute);font-size:12px;line-height:1.3;margin-top:4px}
+  .hero.soon .d{color:var(--amber);font-size:12px;font-weight:800;line-height:1.3;margin-top:4px}
   .hero.soon .price{color:var(--amber)}
   .item.pic .name{font-size:16px}
   .item.pic .desc{margin-top:1px}
@@ -137,12 +137,12 @@ const DEVICES = [
   { id:"elsewhen", name:"Elsewhen",      ver:"v1.1", price:"$19", badge:"new", url:SITE+"/elsewhen" }
 ];
 /* 맨 위 큰 칸: 곧 나올 제품 (없으면 SOON = null → NEN Complete 대신 hero 쓰려면 PRODUCTS에 hero:true) */
-const SOON = { name:"Name Tag", price:"$12", url:GR+"/nametag",
+const SOON = { name:"Name Tag", price:"$8.40", was:"$12", url:GR+"/nametag/NAMETAG30",
   video:["../video/nametag-soon.webm","../video/nametag-soon.mp4"], poster:"../img/soon/nametag.jpg",
-  tag:{ en:"New · v1.1.0", ko:"신규 · v1.1.0", ja:"新着 · v1.1.0" },
-  desc:{ en:"Clean track names in one click.",
-         ko:"트랙 이름 정리, 클릭 한 번.",
-         ja:"トラック名をワンクリックで整理。" } };
+  tag:{ en:"Out now", ko:"출시", ja:"発売" },
+  desc:{ en:"Launch sale −30% · code NAMETAG30 · until Dec 7, 2026",
+         ko:"출시 기념 30% 할인 · 코드 NAMETAG30 · 2026년 12월 7일까지",
+         ja:"発売記念30%オフ · NAMETAG30 · 2026/12/7まで" } };
 const PRODUCTS = [
   { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46",
     tag:{ en:"New bundle", ko:"새 번들", ja:"新バンドル" },
@@ -205,7 +205,7 @@ function render(){
     v.addEventListener("error", ()=>{}, true);
     hero.querySelector(".new").textContent = SOON.tag[LANG]||SOON.tag.en;
     hero.querySelector(".t").textContent = SOON.name;
-    hero.querySelector(".price").textContent = SOON.price;
+    hero.querySelector(".price").innerHTML = (SOON.was ? '<s style="color:var(--mute);font-weight:500;margin-right:6px">'+SOON.was+'</s>' : "") + SOON.price;
     hero.querySelector(".d").textContent = SOON.desc[LANG]||SOON.desc.en;
     if (SOON.url) { hero.style.cursor = "pointer"; wire(hero, SOON.url); } else hero.removeAttribute("role");
     v.play && v.play().catch(()=>{});
