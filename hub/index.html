@@ -17,7 +17,7 @@
   *{box-sizing:border-box;margin:0;padding:0}
   html,body{background:var(--ink);color:var(--paper);font:500 13px/1.45 var(--sans);
     -webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
-  body{padding:10px 12px 12px;min-height:100vh;display:flex;flex-direction:column;gap:8px}
+  body{padding:8px 12px 10px;min-height:100vh;display:flex;flex-direction:column;gap:7px}
 
   header{display:flex;align-items:center;gap:10px}
   .logo{flex:none;width:40px;height:40px;background:var(--paper);color:var(--ink);display:grid;place-items:center;
@@ -53,6 +53,16 @@
   .item .price{font:800 13px/1 var(--sans);color:var(--amber)}
   .item .desc{color:var(--mute);font-size:12px;margin-top:3px;max-width:36ch;line-height:1.35}
 
+  .sec{display:flex;justify-content:space-between;align-items:baseline;font:800 10px/1 var(--sans);letter-spacing:.14em;color:var(--mute);text-transform:uppercase;margin:2px 0 -2px}
+  .mini{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid var(--line);text-decoration:none;color:inherit;cursor:pointer;transition:background .12s,padding .12s}
+  .mini:hover{background:var(--row);padding-left:10px}
+  .mini .name{font:800 15px/1.1 var(--sans);letter-spacing:-.01em}
+  .mini .ver{color:var(--mute);font-size:11px}
+  .mini .price{margin-left:auto;font:800 12px/1 var(--sans);color:var(--amber)}
+  .badge{font:800 9.5px/1 var(--sans);letter-spacing:.04em;padding:3px 5px;border-radius:2px;white-space:nowrap}
+  .badge.up{background:var(--amber);color:var(--ink)}
+  .badge.new{background:var(--paper);color:var(--ink)}
+  #devlist{border-top:1px solid var(--line)}
   .all{display:flex;justify-content:space-between;align-items:center;border:2px solid var(--paper);color:var(--paper);
     padding:11px 14px;text-decoration:none;font:800 14px/1 var(--sans);cursor:pointer;transition:background .12s,color .12s}
   .all:hover{background:var(--paper);color:var(--ink)}
@@ -77,7 +87,10 @@
 </header>
 
 <a class="hero" id="hero" role="link"></a>
+<div class="sec"><span data-t="bundles"></span></div>
 <div class="list" id="products"></div>
+<div class="sec"><span data-t="devs"></span><span data-t="devnote"></span></div>
+<div id="devlist"></div>
 <a class="all" id="all" role="link"></a>
 
 <footer>
@@ -94,6 +107,14 @@ const SRC = "utm_source=hub&utm_medium=device";
 const SITE = "https://nen-stuio.vercel.app/plug-ins/m4l";
 
 const GR = "https://nodnxd.gumroad.com/l";
+/* 개별 디바이스: badge "up" = 업데이트됨, "new" = 신규, "" = 표시 없음 (버전 올릴 때 여기만 고치면 됨) */
+const DEVICES = [
+  { name:"Set Monitor",   ver:"v4.11",  price:"$29", badge:"up",  url:SITE+"/set-monitor" },
+  { name:"Strip Silence", ver:"v1.1",   price:"$19", badge:"up",  url:SITE+"/strip-silence" },
+  { name:"Drum Slicer",   ver:"v1.2.0", price:"$29", badge:"up",  url:SITE+"/drum-slicer" },
+  { name:"Elsewhere",     ver:"v0.7",   price:"$29", badge:"",    url:SITE+"/elsewhere" },
+  { name:"Elsewhen",      ver:"v1.0b6", price:"$19", badge:"new", url:SITE+"/elsewhen" }
+];
 const PRODUCTS = [
   { id:"complete", name:"NEN Complete", price:"$79", ver:"5 devices · save $46", hero:true,
     tag:{ en:"New bundle", ko:"새 번들", ja:"新バンドル" },
@@ -114,9 +135,9 @@ const PRODUCTS = [
 ];
 
 const T = {
-  en:{ lead:"HUB is free. These are our other devices for Ableton Live.", all:"See all plug-ins", newtag:"New", foot:"Drag in. No installer." },
-  ko:{ lead:"HUB는 무료예요. Ableton Live용 다른 디바이스도 만나보세요.", all:"플러그인 전체 보기", newtag:"신규", foot:"끌어다 놓기만 하면 끝. 설치 프로그램 없음." },
-  ja:{ lead:"HUBは無料です。Ableton Live用のほかのデバイスもどうぞ。", all:"すべてのプラグインを見る", newtag:"新着", foot:"ドラッグするだけ。インストーラー不要。" }
+  en:{ lead:"HUB is free. These are our other devices for Ableton Live.", all:"See all plug-ins", newtag:"New", foot:"Drag in. No installer.", bundles:"Bundles", devs:"Devices", devnote:"", up:"Updated", nw:"New" },
+  ko:{ lead:"HUB는 무료예요. Ableton Live용 다른 디바이스도 만나보세요.", all:"플러그인 전체 보기", newtag:"신규", foot:"끌어다 놓기만 하면 끝. 설치 프로그램 없음.", bundles:"번들", devs:"디바이스", devnote:"", up:"업데이트", nw:"신규" },
+  ja:{ lead:"HUBは無料です。Ableton Live用のほかのデバイスもどうぞ。", all:"すべてのプラグインを見る", newtag:"新着", foot:"ドラッグするだけ。インストーラー不要。", bundles:"バンドル", devs:"デバイス", devnote:"", up:"アップデート", nw:"新着" }
 };
 
 /* 외부 링크: Max jweb → 엔진 → 기본 브라우저. 일반 브라우저에선 새 탭 */
@@ -168,6 +189,14 @@ function render(){
       wire(a, p.url);
       list.appendChild(a);
     }
+  });
+  const dl = document.getElementById("devlist"); dl.textContent = "";
+  DEVICES.forEach(d=>{
+    const a = document.createElement("a"); a.className = "mini"; a.setAttribute("role","link");
+    a.innerHTML = '<span class="name"></span><span class="ver"></span><span class="price"></span>';
+    a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; a.querySelector(".price").textContent = d.price;
+    if (d.badge) { const b = document.createElement("span"); b.className = "badge " + d.badge; b.textContent = d.badge === "up" ? L.up : L.nw; a.insertBefore(b, a.querySelector(".price")); }
+    wire(a, d.url); dl.appendChild(a);
   });
   const all = document.getElementById("all");
   all.innerHTML = '<span></span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 8h11M9 3l5 5-5 5"/></svg>';
