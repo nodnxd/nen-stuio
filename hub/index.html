@@ -133,16 +133,16 @@ let HAVE = readHave();
 window.addEventListener("hashchange", ()=>{ HAVE = readHave(); render(); });
 const LIB = "https://app.gumroad.com/library";
 /* 개별 디바이스: badge "up" = 업데이트됨, "new" = 신규, "" = 표시 없음 (버전 올릴 때 여기만 고치면 됨) */
+const SALE_OVER = Date.now() > Date.parse("2026-12-07T23:59:59+09:00");   // Name Tag 출시 할인(NAMETAG30) 끝나면 자동으로 정가 표시
 const DEVICES = [
   { id:"setmonitor", name:"Set Monitor",   ver:"v4.11.1",  price:"$29", badge:"up",  url:SITE+"/set-monitor" },
   { id:"stripsilence", name:"Strip Silence", ver:"v1.5",   price:"$19", badge:"up",  url:SITE+"/strip-silence" },
   { id:"drumslicer", name:"Drum Slicer",   ver:"v1.2.0", price:"$29", badge:"up",  url:SITE+"/drum-slicer" },
   { id:"elsewhere", name:"Elsewhere",     ver:"v1.0",   price:"$29", badge:"",    url:SITE+"/elsewhere" },
   { id:"elsewhen", name:"Elsewhen",      ver:"v1.1", price:"$19", badge:"new", url:SITE+"/elsewhen" },
-  { id:"nametag", name:"Name Tag",      ver:"v1.1.0", price:"$12", badge:"new", url:SITE+"/name-tag", sideOnly:true }   // 칸이 하나인 옛 HUB에선 높이가 넘쳐서 SIDE일 때만
+  { id:"nametag", name:"Name Tag",      ver:"v1.1.0", price:SALE_OVER ? "$12" : "$8.40", badge:"new", url:SALE_OVER ? SITE+"/name-tag" : GR+"/nametag/NAMETAG30", sideOnly:true }   // 칸이 하나인 옛 HUB에선 높이가 넘쳐서 SIDE일 때만
 ];
 /* 맨 위 큰 칸: 곧 나올 제품 (없으면 SOON = null → NEN Complete 대신 hero 쓰려면 PRODUCTS에 hero:true) */
-const SALE_OVER = Date.now() > Date.parse("2026-12-07T23:59:59+09:00");   // Name Tag 출시 할인(NAMETAG30) 끝나면 자동으로 정가 표시
 const SOON = { name:"Name Tag", price:SALE_OVER ? "$12" : "$8.40", was:SALE_OVER ? "" : "$12", url:GR+(SALE_OVER ? "/nametag" : "/nametag/NAMETAG30"),
   video:["../video/nametag-soon.webm","../video/nametag-soon.mp4"], poster:"../img/soon/nametag.jpg",
   tag:{ en:"Out now", ko:"출시", ja:"発売" },
