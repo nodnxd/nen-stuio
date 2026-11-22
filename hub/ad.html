@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>HUB · New</title>
+<title>HUB · Updated</title>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&display=swap" rel="stylesheet">
 <style>
   :root.light .item .price,:root.light .mini .price,:root.light .cap .price,:root.light .sale,:root.light .hero.soon .d,:root.light .hero.soon .price{color:#b86f00;border-color:#b86f00}
@@ -48,24 +48,22 @@
   </div>
 </div>
 <a class="card" id="card" role="link">
-  <div class="vid"><video muted playsinline autoplay preload="auto" poster="../img/soon/nametag-ad.jpg" aria-label="Name Tag">
-    <source src="../video/nametag-ad.webm?v=2" type="video/webm"><source src="../video/nametag-ad.mp4?v=2" type="video/mp4"></video></div>
+  <div class="vid"><video muted playsinline autoplay preload="auto" poster="../img/soon/stripsilence-ad.jpg" aria-label="Strip Silence">
+    <source src="../video/stripsilence-ad.webm?v=1" type="video/webm"><source src="../video/stripsilence-ad.mp4?v=1" type="video/mp4"></video></div>
   <div class="cap">
-    <div class="row"><span class="name">Name Tag</span><span class="price"><s>$12</s>$8.40</span></div>
+    <div class="row"><span class="name">Strip Silence</span><span class="price">$19</span></div>
     <p class="desc" data-t="desc"></p>
-    <div class="sale"><span data-t="sale"></span> <code>NAMETAG30</code><br><span data-t="until"></span></div>
+    <p class="desc" data-t="own"></p>
     <div class="cta"><span data-t="cta"></span><span>→</span></div>
   </div>
 </a>
 <script>
 /* HUB 오른쪽 광고 칸 — 지금 홍보할 제품 하나만. 바꿀 때는 이 파일만 고치면 됨 */
-const SALE_OVER = Date.now() > Date.parse("2026-12-07T23:59:59+09:00");   // 할인 끝나면 자동 정가
-const URL_ = "https://nodnxd.gumroad.com/l/nametag" + (SALE_OVER ? "" : "/NAMETAG30") + "?utm_source=hub&utm_medium=device&utm_content=side";
-if (SALE_OVER) { document.querySelector(".sale").remove(); document.querySelector(".price").innerHTML = "$12"; }
+const URL_ = "https://nodnxd.gumroad.com/l/stripsilence?utm_source=hub&utm_medium=device&utm_content=side";
 const T = {
-  en:{tag:"New · Max for Live", desc:"Clean track names in one click. Numbered, prefixed, colored.", sale:"Launch sale −30% · code", until:"Until Dec 7, 2026", cta:"Get Name Tag"},
-  ko:{tag:"신규 · Max for Live", desc:"트랙 이름 정리, 클릭 한 번. 번호·접두어·색상까지.", sale:"출시 기념 30% 할인 · 코드", until:"2026년 12월 7일까지", cta:"Name Tag 받기"},
-  ja:{tag:"新着 · Max for Live", desc:"トラック名をワンクリックで整理。番号・プレフィックス・カラーまで。", sale:"発売記念 30%オフ · コード", until:"2026年12月7日まで", cta:"Name Tag を入手"}
+  en:{tag:"Updated · v1.6", desc:"Removes silence from vocal takes. Now you see every cut before you strip, and breaths are cut whole.", own:"Already own it? v1.6 is a free update.", cta:"Get Strip Silence"},
+  ko:{tag:"업데이트 · v1.6", desc:"보컬 테이크의 빈 구간을 정리해요. 이제 자르기 전에 잘리는 곳이 다 보이고, 숨소리는 통째로 잘려요.", own:"이미 갖고 계시면 v1.6은 무료 업데이트예요.", cta:"Strip Silence 받기"},
+  ja:{tag:"アップデート · v1.6", desc:"ボーカルテイクの無音をカット。カット前にすべての切れ目が見え、ブレスは丸ごとカット。", own:"お持ちの方は v1.6 に無料でアップデートできます。", cta:"Strip Silence を入手"}
 };
 let LASTOPEN = 0;
 function openExternal(url){
