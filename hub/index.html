@@ -124,7 +124,7 @@
    편집은 여기만:  PRODUCTS 배열 (hero:true 항목이 위 큰 주황 칸)
    가격/주소는 NEN STUDIO 사이트(nen-stuio.vercel.app)와 맞추기
    =================================================================== */
-const SRC = "utm_source=hub&utm_medium=device";
+const SRC = "utm_source=" + encodeURIComponent((new URLSearchParams(location.search).get("src") || "hub").replace(/[^a-z0-9_-]/gi,"").slice(0,32) || "hub") + "&utm_medium=device";   // ?src=<device> tags which device showed the ad (default hub)
 const SITE = "https://nen-stuio.vercel.app/plug-ins/m4l";
 
 const GR = "https://nodnxd.gumroad.com/l";
