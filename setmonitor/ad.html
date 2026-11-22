@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Set Monitor Lite · Ad</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;800;900&display=swap" rel="stylesheet">
+<style>
+  :root.light .item .price,:root.light .mini .price,:root.light .cap .price,:root.light .sale,:root.light .hero.soon .d,:root.light .hero.soon .price{color:#b86f00;border-color:#b86f00}
+  :root.light{--ink:#EFEBE3;--paper:#1B1A18;--mute:#6F6A61;--line:#D2CBBD;--row:#E6E1D6;--card:#E6E1D6;--card-h:#DDD7CA}
+
+  :root{--card:#1B1B1A;--card-h:#222220;--ink:#141414;--paper:#ECE9E2;--amber:#E8AF4D;--amber-deep:#D49A33;--mute:#8E8A82;--line:#2C2B28;
+    --sans:"Helvetica Neue","Archivo","Apple SD Gothic Neo","Hiragino Sans","Noto Sans CJK KR",Arial,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--ink);color:var(--paper);font:500 13px/1.45 var(--sans);-webkit-font-smoothing:antialiased;overflow:hidden;word-break:keep-all}
+  body{height:100vh;padding:8px 12px 10px;display:flex;flex-direction:column;gap:9px}
+  .top{display:flex;align-items:center;justify-content:space-between;height:40px}
+  .tag{font:800 11px/1 var(--sans);background:var(--amber);color:var(--ink);padding:5px 8px}
+  .lang{display:flex;gap:2px}
+  .lang button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:800 11px/1 var(--sans);padding:6px 5px;cursor:pointer}
+  .lang button[aria-pressed="true"]{color:var(--paper);border-bottom-color:var(--amber)}
+  a.card{flex:1;display:flex;flex-direction:column;background:var(--card);color:inherit;text-decoration:none;cursor:pointer;min-height:0;transition:background .15s}
+  a.card:hover{background:var(--card-h)}
+  .vid{position:relative;flex:1;min-height:0;overflow:hidden;background:#1d1e23}
+  .vid img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left top}
+  .cap{padding:12px 14px 14px}
+  .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .name{font:900 30px/1 var(--sans);letter-spacing:-.03em}
+  .price{font:800 18px/1 var(--sans);color:var(--amber);white-space:nowrap}
+  .price s{color:var(--mute);font-weight:500;font-size:14px;margin-right:6px}
+  .desc{color:var(--mute);font-size:12.5px;margin-top:6px;line-height:1.35}
+  .sale{margin-top:10px;border:2px solid var(--amber);color:var(--amber);padding:9px 11px;font:800 13px/1.3 var(--sans)}
+  .sale code{font:900 15px/1 var(--sans);letter-spacing:.04em;color:var(--paper)}
+  .cta{margin-top:10px;display:flex;justify-content:space-between;align-items:center;background:var(--amber);color:var(--ink);padding:12px 14px;font:800 14px/1 var(--sans)}
+  a.card:hover .cta{background:var(--amber-deep)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* NEN AUDIO look: soft corners */
+  .tag,.cta,video,img{border-radius:3px}
+</style>
+<script>if(/[?&]theme=light/.test(location.search))document.documentElement.classList.add("light");</script>
+</head>
+<body>
+<div class="top"><span class="tag" data-t="tag"></span>
+  <div class="lang" role="group" aria-label="Language">
+    <button data-lang="en" aria-pressed="false">EN</button><button data-lang="ko" aria-pressed="false">KO</button><button data-lang="ja" aria-pressed="false">JA</button>
+  </div>
+</div>
+<a class="card" id="card" role="link">
+  <div class="vid"><img src="../img/setmonitor/mixer.png?v=1" alt="Set Monitor mixer"></div>
+  <div class="cap">
+    <div class="row"><span class="name">Set Monitor</span><span class="price">$29</span></div>
+    <p class="desc" data-t="desc"></p>
+    <p class="desc" data-t="own"></p>
+    <div class="cta"><span data-t="cta"></span><span>→</span></div>
+  </div>
+</a>
+<script>
+/* Set Monitor Lite 오른쪽 광고 칸 — 정식판 하나만. 바꿀 때는 이 파일만 고치면 됨 */
+const URL_ = "https://nodnxd.gumroad.com/l/setmonitor?utm_source=setmonitor-lite&utm_medium=device&utm_content=side";
+const T = {
+  en:{tag:"Full version", desc:"You are using Lite: it shows everything, it edits nothing. The full Set Monitor turns the same window into a real mixer.", own:"Faders, pan, mute, solo, every plugin insert, rename, colour, add plugins by name.", cta:"Get Set Monitor"},
+  ko:{tag:"정식 버전", desc:"지금은 Lite예요. 보기만 하고 아무것도 바꾸지 못해요. 정식 Set Monitor는 같은 창에서 바로 믹싱할 수 있어요.", own:"페이더, 팬, 뮤트, 솔로, 플러그인 인서트 조작, 이름·색 변경, 이름으로 플러그인 추가.", cta:"Set Monitor 받기"},
+  ja:{tag:"フル版", desc:"今は Lite です。見るだけで何も変更できません。フル版 Set Monitor は同じウィンドウでそのままミックスできます。", own:"フェーダー、パン、ミュート、ソロ、プラグインのインサート操作、名前・色の変更、名前検索で追加。", cta:"Set Monitor を入手"}
+};
+let LASTOPEN = 0;
+function openExternal(url){
+  const now = Date.now(); if (now - LASTOPEN < 1000) return; LASTOPEN = now;
+  try{ if (window.max && typeof window.max.outlet === "function") { window.max.outlet("openurl", url); return; } }catch(e){}
+  window.open(url, "_blank", "noopener");
+}
+const card = document.getElementById("card");
+card.href = URL_;
+card.onclick = ev => { ev.preventDefault(); openExternal(URL_); };
+let LANG = "en";
+try{ const sv = localStorage.getItem("setmonitor_lang"); const nav = (navigator.language||"en").slice(0,2); LANG = sv || (T[nav] ? nav : "en"); }catch(e){}
+if (!T[LANG]) LANG = "en";
+function render(){
+  document.documentElement.lang = LANG;
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = T[LANG][el.dataset.t]);
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang===LANG)));
+}
+document.querySelectorAll(".lang button").forEach(b => b.onclick = () => { LANG = b.dataset.lang; try{localStorage.setItem("setmonitor_lang",LANG)}catch(e){} render(); });
+render();
+try{ if (window.max && typeof window.max.outlet === "function") window.max.outlet("adready"); }catch(e){}
+window.addEventListener("load", function(){ try{ if (window.max) window.max.outlet("adready"); }catch(e){} });
+
+window.addEventListener("storage", e=>{ if(e.key==="setmonitor_lang"&&e.newValue&&e.newValue!==LANG){ LANG=e.newValue; render(); } });   // 두 칸 언어 같이 바뀌게
+</script>
+</body>
+</html>
