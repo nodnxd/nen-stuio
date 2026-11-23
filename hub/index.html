@@ -182,6 +182,13 @@ const T = {
   ja:{ lead:"HUBは無料です。Ableton Live用のほかのデバイスもどうぞ。", all:"すべてのプラグインを見る", newtag:"新着", foot:"ドラッグするだけ。インストーラー不要。", bundles:"バンドル", devs:"デバイス", devnote:"", up:"アップデート", nw:"新着", have:"インストール済み", upd:"アップデート" }
 };
 
+/* 무료 디바이스마다 첫 줄 이름 바꾸기 (?src=deliver → "Deliver is free…") */
+(function(){
+  const src = (new URLSearchParams(location.search).get("src") || "hub").toLowerCase();
+  const NAME = { "deliver":"Deliver", "setmonitor-lite":"Set Monitor Lite" }[src];
+  if (NAME) for (const l in T) T[l].lead = T[l].lead.replace("HUB", NAME);
+})();
+
 /* 외부 링크: Max jweb → 엔진 → 기본 브라우저. 일반 브라우저에선 새 탭 */
 let LASTOPEN = {u:"", t:0};
 function openExternal(url){
