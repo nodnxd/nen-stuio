@@ -3,7 +3,7 @@
 (function(){
   var P = [
     { key:"bf", from:"2026-11-24T00:00:00+09:00", to:"2026-12-01T09:00:00+09:00", pct:20, bpct:20, bcode:"",
-      exclude:["nametag"],
+      exclude:[], special:{ nametag:30 },          // Name Tag: 출시 할인 30%(NAMETAG30)가 더 커서 그걸로 표시
       label:{ en:"Black Friday", ko:"블랙프라이데이", ja:"ブラックフライデー" },
       until:{ en:"Ends Nov 30, 4 PM PT", ko:"12월 1일 오전 9시까지", ja:"12月1日 9時まで" },
       line:{ en:"Every device and bundle 20% off. The price is already discounted at checkout, no code needed.",
@@ -26,7 +26,8 @@
     if (!cur) return null;
     if (cur.exclude.indexOf(id) > -1) return null;
     var n = parseFloat(String(p).replace(/[^0-9.]/g,"")); if (!n) return null;
-    return { was:p, now:money(n * (1 - (bundle ? cur.bpct : cur.pct)/100)) };
+    var pct = (cur.special && cur.special[id]) || (bundle ? cur.bpct : cur.pct);
+    return { was:p, now:money(n * (1 - pct/100)), pct:pct };
   }
   /* 번들 주소에 코드 붙이기 (연말 번들 20%는 코드로만) */
   function bundleUrl(u){ return cur && cur.bcode ? u.replace(/\/?(\?|$)/, "/" + cur.bcode + "$1") : u; }

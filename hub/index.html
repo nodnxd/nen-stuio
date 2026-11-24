@@ -94,7 +94,7 @@
   .all{border-width:1px;border-color:var(--line);background:var(--card)}
 </style>
 <script>if(/[?&]theme=light/.test(location.search))document.documentElement.classList.add("light");</script>
-<script src="../promo.js?v=1"></script>
+<script src="../promo.js?v=2"></script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script><script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
@@ -274,7 +274,7 @@ function render(){
     if (d.sideOnly && !SIDE) return;
     const a = document.createElement("a"); a.className = "mini"; a.setAttribute("role","link");
     a.innerHTML = '<span class="name"></span><span class="ver"></span><span class="price"></span>';
-    a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; salePrice(a.querySelector(".price"), d.price, d.id, false);
+    a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; salePrice(a.querySelector(".price"), (PR && d.id === "nametag") ? "$12" : d.price, d.id, false);
     const h = HAVE[d.id];
     /* 설치 정보가 없을 때는 "New"만 표시 ("Updated"는 이미 받은 사람에게 헷갈려서 뺌) */
     let cls = d.badge === "new" ? "new" : "", txt = L.nw, url = d.url;

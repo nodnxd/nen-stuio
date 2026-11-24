@@ -49,7 +49,7 @@
   .salebox li .pr{color:var(--amber);white-space:nowrap}
   .salebox li s{color:#8E8A82;font-weight:500;margin-right:6px}
 </style>
-<script src="../promo.js?v=1"></script>
+<script src="../promo.js?v=2"></script>
 <script>if(/[?&]theme=light/.test(location.search))document.documentElement.classList.add("light");</script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script><script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -98,7 +98,7 @@ document.querySelectorAll(".lang button").forEach(b => b.onclick = () => { LANG 
 render();
 /* ---- 세일 기간이면 칸 전체를 세일 안내로 (promo.js 일정) ---- */
 const PR = window.NEN_PROMO;
-const SALE_ITEMS = [["Set Monitor","$29","setmonitor"],["Strip Silence","$19","stripsilence"],["Drum Slicer","$29","drumslicer"],["Elsewhere","$29","elsewhere"],["Elsewhen","$19","elsewhen"],["NEN Complete · 5 devices","$79","complete",1]];
+const SALE_ITEMS = [["Set Monitor","$29","setmonitor"],["Strip Silence","$19","stripsilence"],["Drum Slicer","$29","drumslicer"],["Elsewhere","$29","elsewhere"],["Elsewhen","$19","elsewhen"],[(window.NEN_PROMO&&window.NEN_PROMO.key==="bf")?"Name Tag · code NAMETAG30":"Name Tag","$12","nametag"],["NEN Complete · 5 devices","$79","complete",1]];
 const SALE_T = {
   en:{tag:"Sale", cta:"Shop the sale", off:"OFF"}, ko:{tag:"세일", cta:"세일 보러 가기", off:"할인"}, ja:{tag:"セール", cta:"セールを見る", off:"オフ"}
 };
