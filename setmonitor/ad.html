@@ -39,6 +39,7 @@
   /* NEN AUDIO look: soft corners */
   .tag,.cta,video,img{border-radius:3px}
 </style>
+<script src="../promo.js?v=1"></script>
 <script>if(/[?&]theme=light/.test(location.search))document.documentElement.classList.add("light");</script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script><script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -84,6 +85,17 @@ function render(){
 }
 document.querySelectorAll(".lang button").forEach(b => b.onclick = () => { LANG = b.dataset.lang; try{localStorage.setItem("setmonitor_lang",LANG)}catch(e){} render(); });
 render();
+/* ---- 세일 기간: 가격 줄 긋고 할인가, 태그에 세일 이름 (promo.js 일정) ---- */
+const PR = window.NEN_PROMO, PZ = PR && PR.price("$29", "setmonitor", false);
+if (PZ) {
+  const SURL = URL_.replace("utm_content=side", "utm_content=side-" + PR.key);
+  card.href = SURL; card.onclick = ev => { ev.preventDefault(); openExternal(SURL); };
+  document.querySelector(".cap .price").innerHTML = '<s style="color:var(--mute);font-weight:500;font-size:14px;margin-right:6px">' + PZ.was + '</s>' + PZ.now;
+  const r0 = render; render = function(){ r0();
+    document.querySelector("[data-t=tag]").textContent = (PR.label[LANG]||PR.label.en) + " · −" + PR.pct + "%";
+    document.querySelector("[data-t=own]").textContent = PR.until[LANG]||PR.until.en; };
+  render();
+}
 try{ if (window.max && typeof window.max.outlet === "function") window.max.outlet("adready"); }catch(e){}
 window.addEventListener("load", function(){ try{ if (window.max) window.max.outlet("adready"); }catch(e){} });
 

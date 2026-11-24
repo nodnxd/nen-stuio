@@ -94,6 +94,7 @@
   .all{border-width:1px;border-color:var(--line);background:var(--card)}
 </style>
 <script>if(/[?&]theme=light/.test(location.search))document.documentElement.classList.add("light");</script>
+<script src="../promo.js?v=1"></script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script><script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
@@ -177,6 +178,15 @@ const PRODUCTS = [
            ja:"Strip Silence + Drum Slicer。$9お得。" } }
 ];
 
+/* 세일 기간 (promo.js): 가격에 줄 긋고 할인가, 번들 주소에 코드 */
+const PR = window.NEN_PROMO;
+function salePrice(el, p, id, bundle){
+  const z = PR && PR.price(p, id, bundle);
+  if (!z) { el.textContent = p; return; }
+  el.innerHTML = '<s style="color:var(--mute);font-weight:500;margin-right:5px"></s><b></b>';
+  el.querySelector("s").textContent = z.was; el.querySelector("b").textContent = z.now;
+}
+if (PR) PRODUCTS.forEach(p => { p.url = PR.bundleUrl(p.url); });
 const T = {
   en:{ lead:"HUB is free. These are our other devices for Ableton Live.", all:"See all plug-ins", newtag:"New", foot:"Drag in. No installer.", bundles:"Bundles", devs:"Devices", devnote:"", up:"Updated", nw:"New", have:"Installed", upd:"Update" },
   ko:{ lead:"HUB는 무료예요. Ableton Live용 다른 디바이스도 만나보세요.", all:"플러그인 전체 보기", newtag:"신규", foot:"끌어다 놓기만 하면 끝. 설치 프로그램 없음.", bundles:"번들", devs:"디바이스", devnote:"", up:"업데이트", nw:"신규", have:"설치됨", upd:"업데이트" },
@@ -220,6 +230,7 @@ function render(){
   document.documentElement.lang = LANG;
   document.querySelectorAll("[data-t]").forEach(el => el.textContent = L[el.dataset.t]);
   document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lang===LANG)));
+  if (PR) { const ld = document.querySelector("[data-t=lead]"); if (ld) ld.textContent = (PR.label[LANG]||PR.label.en) + " — " + (PR.line[LANG]||PR.line.en) + " " + (PR.until[LANG]||PR.until.en) + "."; }
 
   const hero = document.getElementById("hero"), list = document.getElementById("products");
   hero.textContent = ""; list.textContent = "";
@@ -245,14 +256,14 @@ function render(){
       hero.querySelector(".new").textContent = (p.tag && (p.tag[LANG]||p.tag.en)) || L.newtag;
       if (!p.img) { hero.querySelector(".name").textContent = p.name; hero.querySelector(".desc").textContent = d; }
       hero.querySelector(".ver").textContent = p.ver || "";
-      hero.querySelector(".price").textContent = p.price;
+      salePrice(hero.querySelector(".price"), p.price, p.id, true);
       wire(hero, p.url);
     } else {
       const a = document.createElement("a"); a.className = "item"; a.setAttribute("role","link");
       if (p.img) { a.classList.add("pic"); a.innerHTML = '<img alt=""><div><div class="row"><span class="name"></span><span class="price"></span></div><p class="desc"></p></div>'; a.querySelector("img").src = p.img; }
       else a.innerHTML = '<div class="row"><span class="name"></span><span class="price"></span></div><p class="desc"></p>';
       a.querySelector(".name").textContent = p.name;
-      a.querySelector(".price").textContent = p.price;
+      salePrice(a.querySelector(".price"), p.price, p.id, true);
       a.querySelector(".desc").textContent = d;
       wire(a, p.url);
       list.appendChild(a);
@@ -263,7 +274,7 @@ function render(){
     if (d.sideOnly && !SIDE) return;
     const a = document.createElement("a"); a.className = "mini"; a.setAttribute("role","link");
     a.innerHTML = '<span class="name"></span><span class="ver"></span><span class="price"></span>';
-    a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; a.querySelector(".price").textContent = d.price;
+    a.querySelector(".name").textContent = d.name; a.querySelector(".ver").textContent = d.ver; salePrice(a.querySelector(".price"), d.price, d.id, false);
     const h = HAVE[d.id];
     /* 설치 정보가 없을 때는 "New"만 표시 ("Updated"는 이미 받은 사람에게 헷갈려서 뺌) */
     let cls = d.badge === "new" ? "new" : "", txt = L.nw, url = d.url;

@@ -294,9 +294,19 @@ h1,h2,h3,p{margin:0}
   .lb[open]{animation:none}
 }
 </style>
+<script src="/promo.js?v=1"></script>
 <script>window.va=window.va||function(){(window.vaq=window.vaq||[]).push(arguments)};</script><script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
+<a id="salebar" hidden href="https://nodnxd.gumroad.com/?utm_source=site&amp;utm_medium=salebar" target="_blank" rel="noopener"
+   style="display:block;background:var(--accent);color:var(--on-accent);font:800 14px/1.3 var(--face);text-align:center;padding:10px 16px;text-decoration:none;letter-spacing:.01em"></a>
+<script>
+(function(){ var P=window.NEN_PROMO, b=document.getElementById('salebar'); if(!P||!b) return;
+  function paint(){ var l='en'; try{l=localStorage.getItem('nen-lang')||'en'}catch(e){} if(!P.label[l]) l='en';
+    b.textContent=P.label[l]+' · −'+P.pct+'%'+(P.bpct!==P.pct?(l==='ko'?' / 번들 −':l==='ja'?' / バンドル −':' / bundles −')+P.bpct+'%':'')+' — '+P.until[l]+'  →'; }
+  b.hidden=false; paint(); document.addEventListener('click',function(e){ if(e.target&&e.target.closest&&e.target.closest('.lang button')) setTimeout(paint,0); });
+})();
+</script>
 
 <!-- NEN STUDIO > PLUG-INS > M4L. Hash tokens: #home #plug-ins #plug-ins-m4l #plug-ins-m4l-<device> #board #close #support -->
 <nav class="top" id="home" aria-label="Main">
